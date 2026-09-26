@@ -514,9 +514,10 @@ const internal = struct {
         return std.mem.joinZ(gpa, "/", &.{ ".zig-cache", "tmp", &tmp.sub_path });
     }
 
-    /// The path of `name` inside `dir`, NUL-terminated as raylib wants it.
+    /// The path of `name` inside `dir`, NUL-terminated as raylib wants it, joined with the
+    /// separator raylib's directory scans use: `\` on Windows, `/` elsewhere.
     fn pathZ(gpa: std.mem.Allocator, dir: []const u8, name: []const u8) ![:0]u8 {
-        return std.mem.joinZ(gpa, "/", &.{ dir, name });
+        return std.mem.joinZ(gpa, std.fs.path.sep_str, &.{ dir, name });
     }
 
     /// Whether the scanned `list` holds `path` among its entries.
@@ -666,7 +667,7 @@ test "files: data and text round trips in a temporary directory" {
 
     const moved_dir = try internal.pathZ(gpa, dir, "moved");
     defer gpa.free(moved_dir);
-    const moved_path = try internal.pathZ(gpa, dir, "moved/renamed.bin");
+    const moved_path = try internal.pathZ(gpa, moved_dir, "renamed.bin");
     defer gpa.free(moved_path);
     try std.testing.expectEqual(@as(i32, 0), fileMove(renamed_path, moved_path));
     try std.testing.expect(!fileExists(renamed_path));
@@ -714,7 +715,7 @@ test "files: directory scans, dropped files and the working directory" {
     defer gpa.free(hidden_path);
     const sub_path = try internal.pathZ(gpa, dir, "sub");
     defer gpa.free(sub_path);
-    const inner_path = try internal.pathZ(gpa, dir, "sub/inner.bin");
+    const inner_path = try internal.pathZ(gpa, sub_path, "inner.bin");
     defer gpa.free(inner_path);
 
     try std.testing.expect(!directoryExists(sub_path));
