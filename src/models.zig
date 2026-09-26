@@ -484,9 +484,10 @@ pub fn genMeshCubicmap(cubicmap: Image, cubeSize: Vector3) Mesh {
 /// Load materials from model file
 ///
 /// raylib returns its own array plus a count; raylibz returns the array as a
-/// slice, and `null` where raylib found none. raylib has no function that
-/// releases this array — unload each material with `unloadMaterial`, then free
-/// the array with `raylibz.memFree`.
+/// slice, and `null` exactly where raylib returned NULL (a file type it has no
+/// material loader for). raylib has no function that releases this array —
+/// unload each material with `unloadMaterial`, then free the array with
+/// `raylibz.memFree`.
 pub fn loadMaterials(fileName: [:0]const u8) ?[]Material {
     var count: i32 = 0;
     const materials = c.LoadMaterials(cast.cstr(fileName), &count);
@@ -547,8 +548,8 @@ pub fn setModelMeshMaterial(model: *Model, meshId: i32, materialId: i32) void {
 /// Load model animations from file
 ///
 /// raylib returns its own array plus a count; raylibz returns the array as a
-/// slice, and `null` where raylib loaded none. Release the slice with
-/// `unloadModelAnimations`.
+/// slice, and `null` exactly where raylib returned NULL (no animations, or a
+/// file it could not read). Release the slice with `unloadModelAnimations`.
 pub fn loadModelAnimations(fileName: [:0]const u8) ?[]ModelAnimation {
     var count: i32 = 0;
     const animations = c.LoadModelAnimations(cast.cstr(fileName), &count);
