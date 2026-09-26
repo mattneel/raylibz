@@ -6,8 +6,8 @@ and minor, and are not tagged yet (Live at Head: commits are the pins).
 
 ## 6.1.0-dev — unreleased
 
-The package, its raw layer, and the shared layer the function wrappers will sit
-on. Everything raylibz does is raylib's: raylib's own build script builds raylib
+The package, its raw layer, its shared layer, and the wrappers over every
+function of raylib.h and raymath.h. Everything raylibz does is raylib's: raylib's own build script builds raylib
 and translates `raylib.h`, `rcamera.h`, `raymath.h` and `rlgl.h`, and raylibz
 puts a Zig face on those translations.
 
@@ -52,6 +52,27 @@ Added:
   raylib's example notice kept, and `--frames N` so a machine can run a real
   window and exit.
 
-Not yet: the bulk of the function wrappers (they are in progress, one module at a
-time) and raymath's methods on the vector and matrix types. `zig build parity`
-lists exactly what is missing, per module.
+The wrappers, one module file per raylib module, each proved by
+`zig build parity`:
+
+- `core.zig` (112), `files.zig` (60) and `input.zig` (49, with rgestures and
+  rcamera): raylib.h's core module, split at its own section comments.
+- `shapes.zig` (75), `textures.zig` (125), `text.zig` (59), `models.zig` (73)
+  and `audio.zig` (66).
+- raymath's 146 functions as methods on `Vector2`, `Vector3`, `Vector4` and
+  `Matrix` and as free functions in `math.zig`, with `tests/raymath.zig`
+  comparing each against the translated C function bit for bit on fixed and
+  seeded inputs.
+- `examples/texture.zig`: raylib's `textures_logo_raylib` in raylibz, loading
+  and unloading `raybunny.png` (CC0, by VoidSrc).
+- CI on Linux, macOS and Windows with the pinned Zig++, running the examples
+  under Xvfb on Linux.
+
+Fixed:
+
+- A failed `loadModel`, `loadModelFromMesh` or `loadMaterialDefault` releases
+  what raylib allocated before returning `error.LoadFailed`.
+- `build.zig` declares that it reads `examples/`, so an example added or
+  removed is seen without clearing the cache.
+- Tests silence raylib's log where it would print: under `zig build test` a test
+  binary's stdout is the build runner's protocol pipe.

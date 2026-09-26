@@ -1,0 +1,76 @@
+name: CI
+
+# Builds raylibz on Linux, macOS and Windows with the Zig++ build that build.zig.zon pins,
+# runs the unit, layout and raymath tests and the parity check, builds every example, and on
+# Linux runs both examples in a real window under Xvfb for 60 frames.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-latest, windows-2025]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+
+      # raylib's GLFW platform with its default X11 backend, and a display and a
+      # software OpenGL for the example runs.
+      - name: Install raylib's Linux build dependencies and Xvfb
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev \
+            libxext-dev libxfixes-dev libgl-dev xvfb libgl1-mesa-dri
+
+      # Exactly the build the pin names, checked against its release's SHA256SUMS.
+      - name: Install the pinned Zig++
+        run: |
+          version=$(sed -n 's/^ *\.minimum_zig_version = "\(.*\)",$/\1/p' build.zig.zon)
+          tag="zigpp-${version%%+*}"
+          case "$RUNNER_OS" in
+            Linux) host=x86_64-linux ext=tar.xz ;;
+            macOS) host=aarch64-macos ext=tar.xz ;;
+            Windows) host=x86_64-windows ext=zip ;;
+          esac
+          name="zig-$host-$version"
+          base="https://github.com/mattneel/zigpp/releases/download/$tag"
+          curl -fsSL -o "zig.$ext" "$base/${name//+/%2B}.$ext"
+          curl -fsSL -o SHA256SUMS "$base/SHA256SUMS"
+          want=$(awk -v f="$name.$ext" '$2 == f { print $1 }' SHA256SUMS)
+          have=$( (sha256sum "zig.$ext" 2>/dev/null || shasum -a 256 "zig.$ext") | awk '{ print $1 }')
+          test -n "$want" && test "$want" = "$have"
+          case $ext in
+            zip) 7z x -y "zig.$ext" >/dev/null ;;
+            tar.xz) tar -xJf "zig.$ext" ;;
+          esac
+          echo "$PWD/$name" >> "$GITHUB_PATH"
+
+      - name: Test
+        run: zig build test --summary line
+
+      - name: Parity
+        run: zig build parity --summary line
+
+      - name: Build the examples
+        run: zig build examples --summary line
+
+      - name: Run the examples for 60 frames
+        if: runner.os == 'Linux'
+        run: |
+          xvfb-run -a zig build run-basic_window -- --frames 60
+          xvfb-run -a zig build run-texture -- --frames 60
