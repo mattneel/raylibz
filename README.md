@@ -160,26 +160,25 @@ to switch.
 
 ## Status
 
-Working now:
+The wrapper is complete for the pinned raylib (6.1-dev):
 
-* the package, its raw layer (`raylibz.c`, `raylibz.raymath`, `raylibz.rlgl`),
-  and the build steps `test`, `parity`, `examples` and `run-<example>`;
-* all 35 mirrored structs with their layout assertions, the six typedef
-  aliases, `Color`'s 26 colours, all 21 enums, and the `ConfigFlags` and
-  `Gesture` flag sets;
-* the parity machinery: `tests/functions.zig` (every RLAPI function of the
-  pinned raylib.h with its module, and raymath's 146 RMAPI names) and
-  `tests/parity.zig`, which fails, per module, listing what is left;
-* `examples/basic_window.zig`, which runs.
+* every one of raylib.h's 619 functions is wrapped or re-exported: core 112,
+  files 60, input 49, shapes 75, textures 125, text 59, models 73 and audio 66,
+  and `not_wrapped` is empty;
+* raymath's 146 functions are methods on `Vector2`, `Vector3`, `Vector4` and
+  `Matrix`, or free functions in `math.zig`, each tested against the translated
+  C function bit for bit;
+* all 35 mirrored structs carry their layout assertions, and all 21 enums and
+  both flag sets are asserted against raylib's constants;
+* `zig build parity` passes, so a function raylib adds, renames or removes is a
+  failing check;
+* `examples/basic_window.zig` and `examples/texture.zig` run.
 
-In progress: **the function wrappers.** Only the ones `basic_window` needs are
-written so far (`initWindow`, `closeWindow`, `windowShouldClose`, `setTargetFPS`,
-`beginDrawing`, `endDrawing`, `clearBackground`, `drawText`). The rest are being
-written module by module, and `zig build parity` (or
-`zig build parity -Dmodule=textures`, one module at a time) prints exactly what
-each one owes. raymath's methods land the same way. Until the wrappers are done,
-`zig build parity` fails on purpose; `zig build test` and `zig build examples`
-pass.
+CI builds and tests raylibz on Linux, macOS and Windows with the Zig++ build
+`build.zig.zon` pins, and runs both examples under Xvfb on Linux.
+
+Not yet: `owned` on the unload functions, which waits for Zig++'s borrow
+checker ([mattneel/zigpp#32](https://github.com/mattneel/zigpp/issues/32)).
 
 ## License
 
