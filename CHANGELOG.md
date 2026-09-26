@@ -75,4 +75,9 @@ Fixed:
 - `build.zig` declares that it reads `examples/`, so an example added or
   removed is seen without clearing the cache.
 - Tests silence raylib's log where it would print: under `zig build test` a test
-  binary's stdout is the build runner's protocol pipe.
+  binary's stdout is the build runner's protocol pipe, and a stray write hangs
+  the build ([zigpp#35](https://github.com/mattneel/zigpp/issues/35)).
+- The pinned Zig++ is 0.17.0-dev.2480, whose HTTP client sends a request again
+  when the server has closed the pooled connection it went out on. With earlier
+  releases, fetching raylibz's dependencies on a fresh machine could fail with
+  `HttpConnectionClosing`.
