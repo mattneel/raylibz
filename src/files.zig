@@ -340,9 +340,9 @@ pub const isFileDropped = c.IsFileDropped;
 
 /// Load dropped filepaths
 ///
-/// raylib's own list of the paths dropped into the window this frame, empty
-/// when none has been — it holds no allocation of its own to make. Release it
-/// with `unloadDroppedFiles`.
+/// raylib's own list of the paths dropped into the window this frame — the
+/// paths are raylib's, not a copy — empty when no file has been dropped.
+/// Release it with `unloadDroppedFiles`.
 pub fn loadDroppedFiles() FilePathList {
     return cast.as(FilePathList, c.LoadDroppedFiles());
 }
