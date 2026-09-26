@@ -237,6 +237,157 @@ pub const clearBackground = core.clearBackground;
 
 // raylib's shapes module.
 
+/// Set texture and rectangle to be used on shapes drawing.
+pub const setShapesTexture = shapes.setShapesTexture;
+/// Get texture that is used for shapes drawing.
+pub const getShapesTexture = shapes.getShapesTexture;
+/// Get texture source rectangle that is used for shapes drawing.
+pub const getShapesTextureRectangle = shapes.getShapesTextureRectangle;
+/// Draw a pixel using geometry [Can be slow, use with care].
+pub const drawPixel = shapes.drawPixel;
+/// Draw a pixel using geometry (Vector version) [Can be slow, use with care].
+pub const drawPixelV = shapes.drawPixelV;
+/// Draw a line.
+pub const drawLine = shapes.drawLine;
+/// Draw a line (using gl lines).
+pub const drawLineV = shapes.drawLineV;
+/// Draw a line (using triangles/quads).
+pub const drawLineEx = shapes.drawLineEx;
+/// Draw lines sequence (using gl lines).
+pub const drawLineStrip = shapes.drawLineStrip;
+/// Draw line segment cubic-bezier in-out interpolation.
+pub const drawLineBezier = shapes.drawLineBezier;
+/// Draw a dashed line.
+pub const drawLineDashed = shapes.drawLineDashed;
+/// Draw a color-filled triangle, counter-clockwise vertex order.
+pub const drawTriangle = shapes.drawTriangle;
+/// Draw triangle with interpolated colors, counter-clockwise vertex/color order.
+pub const drawTriangleGradient = shapes.drawTriangleGradient;
+/// Draw triangle outline, counter-clockwise vertex order.
+pub const drawTriangleLines = shapes.drawTriangleLines;
+/// Draw triangle outline with line thickness, counter-clockwise vertex order.
+pub const drawTriangleLinesEx = shapes.drawTriangleLinesEx;
+/// Draw a triangle fan defined by points (first vertex is the center).
+pub const drawTriangleFan = shapes.drawTriangleFan;
+/// Draw a triangle strip defined by points.
+pub const drawTriangleStrip = shapes.drawTriangleStrip;
+/// Draw a color-filled rectangle.
+pub const drawRectangle = shapes.drawRectangle;
+/// Draw a color-filled rectangle (Vector version).
+pub const drawRectangleV = shapes.drawRectangleV;
+/// Draw a color-filled rectangle.
+pub const drawRectangleRec = shapes.drawRectangleRec;
+/// Draw a color-filled rectangle with pro parameters.
+pub const drawRectanglePro = shapes.drawRectanglePro;
+/// Draw a vertical-gradient-filled rectangle.
+pub const drawRectangleGradientV = shapes.drawRectangleGradientV;
+/// Draw a horizontal-gradient-filled rectangle.
+pub const drawRectangleGradientH = shapes.drawRectangleGradientH;
+/// Draw a gradient-filled rectangle with custom vertex colors, counter-clockwise color order.
+pub const drawRectangleGradientEx = shapes.drawRectangleGradientEx;
+/// Draw rectangle outline.
+pub const drawRectangleLines = shapes.drawRectangleLines;
+/// Draw rectangle outline with line thickness.
+pub const drawRectangleLinesEx = shapes.drawRectangleLinesEx;
+/// Draw rectangle with rounded edges.
+pub const drawRectangleRounded = shapes.drawRectangleRounded;
+/// Draw rectangle lines with rounded edges.
+pub const drawRectangleRoundedLines = shapes.drawRectangleRoundedLines;
+/// Draw rectangle lines with rounded edges outline and line thickness.
+pub const drawRectangleRoundedLinesEx = shapes.drawRectangleRoundedLinesEx;
+/// Draw a polygon of n sides.
+pub const drawPoly = shapes.drawPoly;
+/// Draw a polygon outline of n sides.
+pub const drawPolyLines = shapes.drawPolyLines;
+/// Draw a polygon outline of n sides with line thickness.
+pub const drawPolyLinesEx = shapes.drawPolyLinesEx;
+/// Draw a color-filled circle.
+pub const drawCircle = shapes.drawCircle;
+/// Draw a color-filled circle (Vector version).
+pub const drawCircleV = shapes.drawCircleV;
+/// Draw a gradient-filled circle.
+pub const drawCircleGradient = shapes.drawCircleGradient;
+/// Draw a piece of a circle.
+pub const drawCircleSector = shapes.drawCircleSector;
+/// Draw circle sector outline.
+pub const drawCircleSectorLines = shapes.drawCircleSectorLines;
+/// Draw circle sector outline with thickness.
+pub const drawCircleSectorLinesEx = shapes.drawCircleSectorLinesEx;
+/// Draw circle outline.
+pub const drawCircleLines = shapes.drawCircleLines;
+/// Draw circle outline (Vector version).
+pub const drawCircleLinesV = shapes.drawCircleLinesV;
+/// Draw circle outline with line thickness.
+pub const drawCircleLinesEx = shapes.drawCircleLinesEx;
+/// Draw ellipse.
+pub const drawEllipse = shapes.drawEllipse;
+/// Draw ellipse (Vector version).
+pub const drawEllipseV = shapes.drawEllipseV;
+/// Draw ellipse outline.
+pub const drawEllipseLines = shapes.drawEllipseLines;
+/// Draw ellipse outline (Vector version).
+pub const drawEllipseLinesV = shapes.drawEllipseLinesV;
+/// Draw ellipse outline with line thickness.
+pub const drawEllipseLinesEx = shapes.drawEllipseLinesEx;
+/// Draw ring.
+pub const drawRing = shapes.drawRing;
+/// Draw ring outline.
+pub const drawRingLines = shapes.drawRingLines;
+/// Draw ring outline with line thickness.
+pub const drawRingLinesEx = shapes.drawRingLinesEx;
+/// Draw spline: Linear, minimum 2 points.
+pub const drawSplineLinear = shapes.drawSplineLinear;
+/// Draw spline: B-Spline, minimum 4 points.
+pub const drawSplineBasis = shapes.drawSplineBasis;
+/// Draw spline: Catmull-Rom, minimum 4 points.
+pub const drawSplineCatmullRom = shapes.drawSplineCatmullRom;
+/// Draw spline: Quadratic Bezier, minimum 3 points (1 control point): [p1, c2, p3, c4...].
+pub const drawSplineBezierQuadratic = shapes.drawSplineBezierQuadratic;
+/// Draw spline: Cubic Bezier, minimum 4 points (2 control points): [p1, c2, c3, p4, c5, c6...].
+pub const drawSplineBezierCubic = shapes.drawSplineBezierCubic;
+/// Draw spline segment: Linear, 2 points.
+pub const drawSplineSegmentLinear = shapes.drawSplineSegmentLinear;
+/// Draw spline segment: B-Spline, 4 points.
+pub const drawSplineSegmentBasis = shapes.drawSplineSegmentBasis;
+/// Draw spline segment: Catmull-Rom, 4 points.
+pub const drawSplineSegmentCatmullRom = shapes.drawSplineSegmentCatmullRom;
+/// Draw spline segment: Quadratic Bezier, 2 points, 1 control point.
+pub const drawSplineSegmentBezierQuadratic = shapes.drawSplineSegmentBezierQuadratic;
+/// Draw spline segment: Cubic Bezier, 2 points, 2 control points.
+pub const drawSplineSegmentBezierCubic = shapes.drawSplineSegmentBezierCubic;
+/// Get (evaluate) spline point: Linear.
+pub const getSplinePointLinear = shapes.getSplinePointLinear;
+/// Get (evaluate) spline point: B-Spline.
+pub const getSplinePointBasis = shapes.getSplinePointBasis;
+/// Get (evaluate) spline point: Catmull-Rom.
+pub const getSplinePointCatmullRom = shapes.getSplinePointCatmullRom;
+/// Get (evaluate) spline point: Quadratic Bezier.
+pub const getSplinePointBezierQuadratic = shapes.getSplinePointBezierQuadratic;
+/// Get (evaluate) spline point: Cubic Bezier.
+pub const getSplinePointBezierCubic = shapes.getSplinePointBezierCubic;
+/// Check collision between two rectangles.
+pub const checkCollisionRecs = shapes.checkCollisionRecs;
+/// Check collision between two circles.
+pub const checkCollisionCircles = shapes.checkCollisionCircles;
+/// Check collision between circle and rectangle.
+pub const checkCollisionCircleRec = shapes.checkCollisionCircleRec;
+/// Check if circle collides with a line created between two points [p1] and [p2].
+pub const checkCollisionCircleLine = shapes.checkCollisionCircleLine;
+/// Check if point is inside rectangle.
+pub const checkCollisionPointRec = shapes.checkCollisionPointRec;
+/// Check if point is inside circle.
+pub const checkCollisionPointCircle = shapes.checkCollisionPointCircle;
+/// Check if point is inside a triangle.
+pub const checkCollisionPointTriangle = shapes.checkCollisionPointTriangle;
+/// Check if point belongs to line created between two points [p1] and [p2] with defined margin in pixels [threshold].
+pub const checkCollisionPointLine = shapes.checkCollisionPointLine;
+/// Check if point is within a polygon described by array of vertices.
+pub const checkCollisionPointPoly = shapes.checkCollisionPointPoly;
+/// Check the collision between two lines defined by two points each, returns collision point by reference.
+pub const checkCollisionLines = shapes.checkCollisionLines;
+/// Get collision rectangle for two rectangles collision.
+pub const getCollisionRec = shapes.getCollisionRec;
+
 // raylib's textures module.
 
 // raylib's text module.
