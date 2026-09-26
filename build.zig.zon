@@ -5,7 +5,7 @@
     .version = "6.1.0-dev",
     // The Zig++ release this package is built and tested with. Zig++'s version
     // dispatch runs exactly this compiler inside this tree.
-    .minimum_zig_version = "0.17.0-dev.2453+zigpp.35608841b",
+    .minimum_zig_version = "0.17.0-dev.2469+zigpp.04926fc36",
 
     .fingerprint = 0x1c692ef423502e, // Changing this has security and trust implications.
 
