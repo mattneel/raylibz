@@ -222,14 +222,224 @@ pub const initWindow = core.initWindow;
 pub const closeWindow = core.closeWindow;
 /// Check if application should close (KEY_ESCAPE pressed or windows close icon clicked).
 pub const windowShouldClose = core.windowShouldClose;
-/// Set target FPS (maximum).
-pub const setTargetFPS = core.setTargetFPS;
+/// Check if window has been initialized successfully.
+pub const isWindowReady = core.isWindowReady;
+/// Check if window is currently fullscreen.
+pub const isWindowFullscreen = core.isWindowFullscreen;
+/// Check if window is currently hidden.
+pub const isWindowHidden = core.isWindowHidden;
+/// Check if window is currently minimized.
+pub const isWindowMinimized = core.isWindowMinimized;
+/// Check if window is currently maximized.
+pub const isWindowMaximized = core.isWindowMaximized;
+/// Check if window is currently focused.
+pub const isWindowFocused = core.isWindowFocused;
+/// Check if window has been resized last frame.
+pub const isWindowResized = core.isWindowResized;
+/// Check if one specific window flag is enabled.
+pub const isWindowState = core.isWindowState;
+/// Set window configuration state using flags.
+pub const setWindowState = core.setWindowState;
+/// Clear window configuration state flags.
+pub const clearWindowState = core.clearWindowState;
+/// Toggle window state: fullscreen/windowed, resizes monitor to match window resolution.
+pub const toggleFullscreen = core.toggleFullscreen;
+/// Toggle window state: borderless windowed, resizes window to match monitor resolution.
+pub const toggleBorderlessWindowed = core.toggleBorderlessWindowed;
+/// Set window state: maximized, if resizable.
+pub const maximizeWindow = core.maximizeWindow;
+/// Set window state: minimized, if resizable.
+pub const minimizeWindow = core.minimizeWindow;
+/// Restore window from being minimized/maximized.
+pub const restoreWindow = core.restoreWindow;
+/// Set icon for window (single image, RGBA 32bit).
+pub const setWindowIcon = core.setWindowIcon;
+/// Set icon for window (multiple images, RGBA 32bit).
+pub const setWindowIcons = core.setWindowIcons;
+/// Set title for window.
+pub const setWindowTitle = core.setWindowTitle;
+/// Set window position on screen.
+pub const setWindowPosition = core.setWindowPosition;
+/// Set monitor for the current window.
+pub const setWindowMonitor = core.setWindowMonitor;
+/// Set window minimum dimensions (for FLAG_WINDOW_RESIZABLE).
+pub const setWindowMinSize = core.setWindowMinSize;
+/// Set window maximum dimensions (for FLAG_WINDOW_RESIZABLE).
+pub const setWindowMaxSize = core.setWindowMaxSize;
+/// Set window dimensions.
+pub const setWindowSize = core.setWindowSize;
+/// Set window opacity [0.0f..1.0f].
+pub const setWindowOpacity = core.setWindowOpacity;
+/// Set window focused.
+pub const setWindowFocused = core.setWindowFocused;
+/// Get native window handle.
+pub const getWindowHandle = core.getWindowHandle;
+/// Get current screen width.
+pub const getScreenWidth = core.getScreenWidth;
+/// Get current screen height.
+pub const getScreenHeight = core.getScreenHeight;
+/// Get current render width (it considers HiDPI).
+pub const getRenderWidth = core.getRenderWidth;
+/// Get current render height (it considers HiDPI).
+pub const getRenderHeight = core.getRenderHeight;
+/// Get number of connected monitors.
+pub const getMonitorCount = core.getMonitorCount;
+/// Get current monitor where window is placed.
+pub const getCurrentMonitor = core.getCurrentMonitor;
+/// Get specified monitor position.
+pub const getMonitorPosition = core.getMonitorPosition;
+/// Get specified monitor width (current video mode used by monitor).
+pub const getMonitorWidth = core.getMonitorWidth;
+/// Get specified monitor height (current video mode used by monitor).
+pub const getMonitorHeight = core.getMonitorHeight;
+/// Get specified monitor physical width in millimetres.
+pub const getMonitorPhysicalWidth = core.getMonitorPhysicalWidth;
+/// Get specified monitor physical height in millimetres.
+pub const getMonitorPhysicalHeight = core.getMonitorPhysicalHeight;
+/// Get specified monitor refresh rate.
+pub const getMonitorRefreshRate = core.getMonitorRefreshRate;
+/// Get window position XY on monitor.
+pub const getWindowPosition = core.getWindowPosition;
+/// Get window scale DPI factor.
+pub const getWindowScaleDPI = core.getWindowScaleDPI;
+/// Get the human-readable, UTF-8 encoded name of the specified monitor.
+pub const getMonitorName = core.getMonitorName;
+/// Set clipboard text content.
+pub const setClipboardText = core.setClipboardText;
+/// Get clipboard text content.
+pub const getClipboardText = core.getClipboardText;
+/// Get clipboard image content.
+pub const getClipboardImage = core.getClipboardImage;
+/// Enable waiting for events on EndDrawing(), no automatic event polling.
+pub const enableEventWaiting = core.enableEventWaiting;
+/// Disable waiting for events on EndDrawing(), automatic events polling.
+pub const disableEventWaiting = core.disableEventWaiting;
+/// Show cursor.
+pub const showCursor = core.showCursor;
+/// Hide cursor.
+pub const hideCursor = core.hideCursor;
+/// Check if cursor is not visible.
+pub const isCursorHidden = core.isCursorHidden;
+/// Enable cursor (unlock cursor).
+pub const enableCursor = core.enableCursor;
+/// Disable cursor (lock cursor).
+pub const disableCursor = core.disableCursor;
+/// Check if cursor is on the screen.
+pub const isCursorOnScreen = core.isCursorOnScreen;
+/// Set background color (framebuffer clear color).
+pub const clearBackground = core.clearBackground;
 /// Setup drawing canvas to start drawing.
 pub const beginDrawing = core.beginDrawing;
 /// End canvas drawing and swap buffers (double buffering).
 pub const endDrawing = core.endDrawing;
-/// Set background color (framebuffer clear color).
-pub const clearBackground = core.clearBackground;
+/// Begin 2D mode with custom camera (2D).
+pub const beginMode2D = core.beginMode2D;
+/// End 2D mode with custom camera.
+pub const endMode2D = core.endMode2D;
+/// Begin 3D mode with custom camera (3D).
+pub const beginMode3D = core.beginMode3D;
+/// End 3D mode and returns to default 2D orthographic mode.
+pub const endMode3D = core.endMode3D;
+/// Begin drawing to render texture.
+pub const beginTextureMode = core.beginTextureMode;
+/// End drawing to render texture.
+pub const endTextureMode = core.endTextureMode;
+/// Begin custom shader drawing.
+pub const beginShaderMode = core.beginShaderMode;
+/// End custom shader drawing (use default shader).
+pub const endShaderMode = core.endShaderMode;
+/// Begin blending mode (alpha, additive, multiplied, subtract, custom).
+pub const beginBlendMode = core.beginBlendMode;
+/// End blending mode (reset to default: alpha blending).
+pub const endBlendMode = core.endBlendMode;
+/// Begin scissor mode (define screen area for following drawing).
+pub const beginScissorMode = core.beginScissorMode;
+/// End scissor mode.
+pub const endScissorMode = core.endScissorMode;
+/// Begin stereo rendering (requires VR simulator).
+pub const beginVrStereoMode = core.beginVrStereoMode;
+/// End stereo rendering (requires VR simulator).
+pub const endVrStereoMode = core.endVrStereoMode;
+/// Load VR stereo config for VR simulator device parameters.
+pub const loadVrStereoConfig = core.loadVrStereoConfig;
+/// Unload VR stereo config.
+pub const unloadVrStereoConfig = core.unloadVrStereoConfig;
+/// Load shader from files and bind default locations.
+pub const loadShader = core.loadShader;
+/// Load shader from code strings and bind default locations.
+pub const loadShaderFromMemory = core.loadShaderFromMemory;
+/// Check if shader is valid (loaded on GPU).
+pub const isShaderValid = core.isShaderValid;
+/// Get shader uniform location.
+pub const getShaderLocation = core.getShaderLocation;
+/// Get shader attribute location.
+pub const getShaderLocationAttrib = core.getShaderLocationAttrib;
+/// Set shader uniform value.
+pub const setShaderValue = core.setShaderValue;
+/// Set shader uniform value vector.
+pub const setShaderValueV = core.setShaderValueV;
+/// Set shader uniform value (matrix 4x4).
+pub const setShaderValueMatrix = core.setShaderValueMatrix;
+/// Set shader uniform value and bind the texture (sampler2d).
+pub const setShaderValueTexture = core.setShaderValueTexture;
+/// Unload shader from GPU memory (VRAM).
+pub const unloadShader = core.unloadShader;
+/// Get a ray trace from screen position (i.e mouse).
+pub const getScreenToWorldRay = core.getScreenToWorldRay;
+/// Get a ray trace from screen position (i.e mouse) in a viewport.
+pub const getScreenToWorldRayEx = core.getScreenToWorldRayEx;
+/// Get screen space position for a 3d world space position.
+pub const getWorldToScreen = core.getWorldToScreen;
+/// Get sized screen space position for a 3d world space position.
+pub const getWorldToScreenEx = core.getWorldToScreenEx;
+/// Get screen space position for a 2d camera world space position.
+pub const getWorldToScreen2D = core.getWorldToScreen2D;
+/// Get world space position for a 2d camera screen space position.
+pub const getScreenToWorld2D = core.getScreenToWorld2D;
+/// Get camera transform matrix (view matrix).
+pub const getCameraMatrix = core.getCameraMatrix;
+/// Get camera 2d transform matrix.
+pub const getCameraMatrix2D = core.getCameraMatrix2D;
+/// Set target FPS (maximum).
+pub const setTargetFPS = core.setTargetFPS;
+/// Get time in seconds for last frame drawn (delta time).
+pub const getFrameTime = core.getFrameTime;
+/// Get elapsed time in seconds since InitWindow().
+pub const getTime = core.getTime;
+/// Get current FPS.
+pub const getFPS = core.getFPS;
+/// Swap back buffer with front buffer (screen drawing).
+pub const swapScreenBuffer = core.swapScreenBuffer;
+/// Register all input events.
+pub const pollInputEvents = core.pollInputEvents;
+/// Wait for some time (halt program execution).
+pub const waitTime = core.waitTime;
+/// Set the seed for the random number generator.
+pub const setRandomSeed = core.setRandomSeed;
+/// Get a random value between min and max (both included).
+pub const getRandomValue = core.getRandomValue;
+/// Load random values sequence, no values repeated.
+pub const loadRandomSequence = core.loadRandomSequence;
+/// Unload random values sequence.
+pub const unloadRandomSequence = core.unloadRandomSequence;
+/// Takes a screenshot of current screen (filename extension defines format).
+pub const takeScreenshot = core.takeScreenshot;
+/// Set up init configuration flags (view FLAGS).
+pub const setConfigFlags = core.setConfigFlags;
+/// Open URL with default system browser (if available).
+pub const openURL = core.openURL;
+/// Set the current threshold (minimum) log level.
+pub const setTraceLogLevel = core.setTraceLogLevel;
+/// Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR...).
+pub const traceLog = core.traceLog;
+/// Set custom trace log.
+pub const setTraceLogCallback = core.setTraceLogCallback;
+/// Internal memory allocator.
+pub const memAlloc = core.memAlloc;
+/// Internal memory reallocator.
+pub const memRealloc = core.memRealloc;
+/// Internal memory free.
+pub const memFree = core.memFree;
 
 // raylib's core module: files, compression, automation events.
 
