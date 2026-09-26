@@ -246,6 +246,153 @@ pub const drawText = text.drawText;
 
 // raylib's models module.
 
+/// Draw a line in 3D world space
+pub const drawLine3D = models.drawLine3D;
+/// Draw a point in 3D space, actually a small line
+pub const drawPoint3D = models.drawPoint3D;
+/// Draw a circle in 3D world space
+pub const drawCircle3D = models.drawCircle3D;
+/// Draw a color-filled triangle, counter-clockwise vertex order
+pub const drawTriangle3D = models.drawTriangle3D;
+/// Draw a triangle strip defined by points
+pub const drawTriangleStrip3D = models.drawTriangleStrip3D;
+/// Draw cube
+pub const drawCube = models.drawCube;
+/// Draw cube (Vector version)
+pub const drawCubeV = models.drawCubeV;
+/// Draw cube wires
+pub const drawCubeWires = models.drawCubeWires;
+/// Draw cube wires (Vector version)
+pub const drawCubeWiresV = models.drawCubeWiresV;
+/// Draw sphere
+pub const drawSphere = models.drawSphere;
+/// Draw sphere with defined rings and slices
+pub const drawSphereEx = models.drawSphereEx;
+/// Draw sphere wires
+pub const drawSphereWires = models.drawSphereWires;
+/// Draw a cylinder/cone
+pub const drawCylinder = models.drawCylinder;
+/// Draw a cylinder with base at startPos and top at endPos
+pub const drawCylinderEx = models.drawCylinderEx;
+/// Draw a cylinder/cone wires
+pub const drawCylinderWires = models.drawCylinderWires;
+/// Draw a cylinder wires with base at startPos and top at endPos
+pub const drawCylinderWiresEx = models.drawCylinderWiresEx;
+/// Draw a capsule with the center of its sphere caps at startPos and endPos
+pub const drawCapsule = models.drawCapsule;
+/// Draw capsule wireframe with the center of its sphere caps at startPos and endPos
+pub const drawCapsuleWires = models.drawCapsuleWires;
+/// Draw a plane XZ
+pub const drawPlane = models.drawPlane;
+/// Draw a ray line
+pub const drawRay = models.drawRay;
+/// Draw a grid (centered at (0, 0, 0))
+pub const drawGrid = models.drawGrid;
+/// Load model from files (meshes and materials)
+pub const loadModel = models.loadModel;
+/// Load model from generated mesh (default material)
+pub const loadModelFromMesh = models.loadModelFromMesh;
+/// Check if model is valid (loaded in GPU, VAO/VBOs)
+pub const isModelValid = models.isModelValid;
+/// Unload model (including meshes) from memory (RAM and/or VRAM)
+pub const unloadModel = models.unloadModel;
+/// Compute model bounding box limits (considers all meshes)
+pub const getModelBoundingBox = models.getModelBoundingBox;
+/// Draw a model (with texture if set)
+pub const drawModel = models.drawModel;
+/// Draw a model with custom transform
+pub const drawModelEx = models.drawModelEx;
+/// Draw a model wires (with texture if set)
+pub const drawModelWires = models.drawModelWires;
+/// Draw a model wires with custom transform
+pub const drawModelWiresEx = models.drawModelWiresEx;
+/// Draw bounding box (wires)
+pub const drawBoundingBox = models.drawBoundingBox;
+/// Draw a billboard texture
+pub const drawBillboard = models.drawBillboard;
+/// Draw a billboard texture defined by rectangle
+pub const drawBillboardRec = models.drawBillboardRec;
+/// Draw a billboard texture defined by source rectangle with scaling and rotation
+pub const drawBillboardPro = models.drawBillboardPro;
+/// Upload mesh vertex data in GPU and provide VAO/VBO ids
+pub const uploadMesh = models.uploadMesh;
+/// Update mesh vertex data in GPU for a specific buffer index
+pub const updateMeshBuffer = models.updateMeshBuffer;
+/// Unload mesh data from CPU and GPU
+pub const unloadMesh = models.unloadMesh;
+/// Draw a 3d mesh with material and transform
+pub const drawMesh = models.drawMesh;
+/// Draw multiple mesh instances with material and different transforms
+pub const drawMeshInstanced = models.drawMeshInstanced;
+/// Compute mesh bounding box limits
+pub const getMeshBoundingBox = models.getMeshBoundingBox;
+/// Compute mesh tangents
+pub const genMeshTangents = models.genMeshTangents;
+/// Export mesh data to file, returns true on success
+pub const exportMesh = models.exportMesh;
+/// Export mesh as code file (.h) defining multiple arrays of vertex attributes
+pub const exportMeshAsCode = models.exportMeshAsCode;
+/// Generate polygonal mesh
+pub const genMeshPoly = models.genMeshPoly;
+/// Generate plane mesh (with subdivisions)
+pub const genMeshPlane = models.genMeshPlane;
+/// Generate cuboid mesh
+pub const genMeshCube = models.genMeshCube;
+/// Generate sphere mesh (standard sphere)
+pub const genMeshSphere = models.genMeshSphere;
+/// Generate half-sphere mesh (no bottom cap)
+pub const genMeshHemiSphere = models.genMeshHemiSphere;
+/// Generate cylinder mesh
+pub const genMeshCylinder = models.genMeshCylinder;
+/// Generate cone/pyramid mesh
+pub const genMeshCone = models.genMeshCone;
+/// Generate torus mesh
+pub const genMeshTorus = models.genMeshTorus;
+/// Generate trefoil knot mesh
+pub const genMeshKnot = models.genMeshKnot;
+/// Generate heightmap mesh from image data
+pub const genMeshHeightmap = models.genMeshHeightmap;
+/// Generate cubes-based map mesh from image data
+pub const genMeshCubicmap = models.genMeshCubicmap;
+/// Load materials from model file
+pub const loadMaterials = models.loadMaterials;
+/// Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps)
+pub const loadMaterialDefault = models.loadMaterialDefault;
+/// Check if material is valid (shader assigned, map textures loaded in GPU)
+pub const isMaterialValid = models.isMaterialValid;
+/// Unload material from GPU memory (VRAM)
+pub const unloadMaterial = models.unloadMaterial;
+/// Set texture for a material map type (MATERIAL_MAP_DIFFUSE, MATERIAL_MAP_SPECULAR...)
+pub const setMaterialTexture = models.setMaterialTexture;
+/// Set material for a mesh
+pub const setModelMeshMaterial = models.setModelMeshMaterial;
+/// Load model animations from file
+pub const loadModelAnimations = models.loadModelAnimations;
+/// Update model animation pose (vertex buffers and bone matrices)
+pub const updateModelAnimation = models.updateModelAnimation;
+/// Update model animation pose, blending two animations
+pub const updateModelAnimationEx = models.updateModelAnimationEx;
+/// Unload animation array data
+pub const unloadModelAnimations = models.unloadModelAnimations;
+/// Check model animation skeleton match
+pub const isModelAnimationValid = models.isModelAnimationValid;
+/// Check collision between two spheres
+pub const checkCollisionSpheres = models.checkCollisionSpheres;
+/// Check collision between two bounding boxes
+pub const checkCollisionBoxes = models.checkCollisionBoxes;
+/// Check collision between box and sphere
+pub const checkCollisionBoxSphere = models.checkCollisionBoxSphere;
+/// Get collision info between ray and sphere
+pub const getRayCollisionSphere = models.getRayCollisionSphere;
+/// Get collision info between ray and box
+pub const getRayCollisionBox = models.getRayCollisionBox;
+/// Get collision info between ray and mesh
+pub const getRayCollisionMesh = models.getRayCollisionMesh;
+/// Get collision info between ray and triangle
+pub const getRayCollisionTriangle = models.getRayCollisionTriangle;
+/// Get collision info between ray and quad
+pub const getRayCollisionQuad = models.getRayCollisionQuad;
+
 // raylib's audio module.
 
 // raymath's free functions.
