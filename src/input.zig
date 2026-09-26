@@ -399,6 +399,15 @@ test "input: the keyboard wrappers reach raylib as its own key codes" {
 test "input: getKeyName is raylib's nullable, raylib-owned text" {
     const std = @import("std");
 
+    // Before GLFW is initialized, raylib's own error callback (installed by
+    // InitWindow, and still installed after CloseWindow) turns GLFW's "not
+    // initialized" into a TRACELOG warning. raylib writes its log to stdout, and
+    // under the build runner a test binary's stdout is the runner's protocol
+    // pipe, so a stray warning desyncs it and hangs `zig build test`. raylib's
+    // default level is c.LOG_INFO; put it back with the defer.
+    c.SetTraceLogLevel(c.LOG_NONE);
+    defer c.SetTraceLogLevel(c.LOG_INFO);
+
     // A printable key: GLFW answers `NULL` before `InitWindow` (there is no
     // layout yet) and a name after it, and raylib hands the pointer through
     // either way. What the wrapper owes the caller is a slice raylib owns, or
