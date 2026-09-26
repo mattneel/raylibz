@@ -662,9 +662,13 @@ test "waveFormat converts the wave's rate, sample size and channels in place" {
     const converted = loadWaveSamples(wave) orelse return error.OutOfMemory;
     defer unloadWaveSamples(converted);
     try internal.testing.expectEqual(@as(usize, 8), converted.len); // frameCount * channels
-    try internal.testing.expectEqual(converted[0], converted[1]); // the mono sample, both channels
-    try internal.testing.expectEqual(converted[2], converted[3]);
-    try internal.testing.expect(converted[0] > 0 and converted[2] > 0);
+    // The mono frames, normalized and duplicated across the two channels:
+    // 8192/32768 = 0.25, -8192/32768 = -0.25, 4096/32768 = 0.125, ...
+    try internal.testing.expectEqualSlices(
+        f32,
+        &.{ 0.25, 0.25, -0.25, -0.25, 0.125, 0.125, -0.125, -0.125 },
+        converted,
+    );
 }
 
 test "loadWaveSamples returns the wave's samples normalized to floats" {
