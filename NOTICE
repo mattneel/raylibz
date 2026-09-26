@@ -55,17 +55,19 @@ The fork
 raylibz pins this raylib fork, by commit (Live at Head: nothing is tagged):
 
     https://github.com/mattneel/raylib
-    branch zigpp, commit f0e501203d18f9c254fbabca353d08b8f4c698ac
+    branch zigpp, commit 64d8418c9becf5f22074da8802c83dd50b8cd294
 
 It is raysan5/raylib's `master` at `fafa2cea97` (RAYLIB_VERSION "6.1-dev",
-432 commits past the 6.0 tag) with one change: raylib's `build.zig` and
+432 commits past the 6.0 tag) with two changes. raylib's `build.zig` and
 `build.zig.zon` are ported to Zig++'s `std.Build` API, so that raylib builds
 with Zig++ and publishes the translations of its headers as the modules `raylib`,
-`rcamera`, `raymath` and `rlgl`. raylib's C sources and public headers are
-unchanged, and the fork's `build.zig` carries its own "ALTERED FOR ZIG++" note
-saying so. raylibz's own dependency entry names the commit tarball and its hash;
-`tests/functions.zig` records the same commit, so a bump is a visible, reviewed
-change.
+`rcamera`, `raymath` and `rlgl`. And `src/external/RGFW/deps/minigamepad.h`, the
+gamepad library raylib vendors with RGFW, no longer indexes past the end of an
+array, which a Zig++ Debug build stops at when a window opens on RGFW. raylib's
+own C sources and public headers are unchanged, and each altered file carries
+an "ALTERED FOR ZIG++" note. raylibz's own dependency entry names the commit
+tarball and its hash; `tests/functions.zig` records the same commit, so a bump
+is a visible, reviewed change.
 
 raylib-zig
 ----------

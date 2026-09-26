@@ -14,7 +14,7 @@ puts a Zig face on those translations.
 Added:
 
 - `build.zig` / `build.zig.zon`: raylib as a dependency, pinned by commit
-  (`mattneel/raylib` branch `zigpp` at `f0e501203d18f9c254fbabca353d08b8f4c698ac`,
+  (`mattneel/raylib` branch `zigpp` at `64d8418c9becf5f22074da8802c83dd50b8cd294`,
   raylib 6.1-dev), every raylib build option forwarded unchanged, module
   `raylibz`, and the steps `test`, `parity` (with `-Dmodule=<file>`), `examples`
   and `run-<example>`.
@@ -81,3 +81,7 @@ Fixed:
   when the server has closed the pooled connection it went out on. With earlier
   releases, fetching raylibz's dependencies on a fresh machine could fail with
   `HttpConnectionClosing`.
+- `-Dplatform=rgfw` opens a window in a Debug build: the pinned raylib fixes an
+  out-of-bounds index in minigamepad, the gamepad library raylib vendors with
+  RGFW, which stopped `initWindow` with "index 15 out of bounds for type
+  'mg_element[6]'".
