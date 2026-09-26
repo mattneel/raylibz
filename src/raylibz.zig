@@ -241,8 +241,124 @@ pub const clearBackground = core.clearBackground;
 
 // raylib's text module.
 
+/// Get the default Font.
+pub const getFontDefault = text.getFontDefault;
+/// Load font from file into GPU memory (VRAM).
+pub const loadFont = text.loadFont;
+/// Load font from file with defined codepoints and generation size, use NULL for codepoints and 0 for codepointCount to load the default character set, font size is provided in pixels height.
+pub const loadFontEx = text.loadFontEx;
+/// Load font from Image (XNA style).
+pub const loadFontFromImage = text.loadFontFromImage;
+/// Load font from memory buffer, fileType refers to extension: i.e. '.ttf'.
+pub const loadFontFromMemory = text.loadFontFromMemory;
+/// Check if font is valid (font data loaded, WARNING: GPU texture not checked).
+pub const isFontValid = text.isFontValid;
+/// Load font data for further use.
+pub const loadFontData = text.loadFontData;
+/// Generate image font atlas using chars info.
+pub const genImageFontAtlas = text.genImageFontAtlas;
+/// Unload font chars info data (RAM).
+pub const unloadFontData = text.unloadFontData;
+/// Unload font from GPU memory (VRAM).
+pub const unloadFont = text.unloadFont;
+/// Export font as code file, returns true on success.
+pub const exportFontAsCode = text.exportFontAsCode;
+/// Draw current FPS.
+pub const drawFPS = text.drawFPS;
 /// Draw text (using default font).
 pub const drawText = text.drawText;
+/// Draw text using font and additional parameters.
+pub const drawTextEx = text.drawTextEx;
+/// Draw text using Font and pro parameters (rotation).
+pub const drawTextPro = text.drawTextPro;
+/// Draw one character (codepoint).
+pub const drawTextCodepoint = text.drawTextCodepoint;
+/// Draw multiple characters (codepoint).
+pub const drawTextCodepoints = text.drawTextCodepoints;
+/// Set vertical line spacing when drawing with line-breaks.
+pub const setTextLineSpacing = text.setTextLineSpacing;
+/// Measure string width for default font.
+pub const measureText = text.measureText;
+/// Measure string size for Font.
+pub const measureTextEx = text.measureTextEx;
+/// Measure string size for an existing array of codepoints for Font.
+pub const measureTextCodepoints = text.measureTextCodepoints;
+/// Get glyph index position in font for a codepoint (unicode character), fallback to '?' if not found.
+pub const getGlyphIndex = text.getGlyphIndex;
+/// Get glyph font info data for a codepoint (unicode character), fallback to '?' if not found.
+pub const getGlyphInfo = text.getGlyphInfo;
+/// Get glyph rectangle in font atlas for a codepoint (unicode character), fallback to '?' if not found.
+pub const getGlyphAtlasRec = text.getGlyphAtlasRec;
+/// Load UTF-8 text encoded from codepoints array.
+pub const loadUTF8 = text.loadUTF8;
+/// Unload UTF-8 text encoded from codepoints array.
+pub const unloadUTF8 = text.unloadUTF8;
+/// Load all codepoints from a UTF-8 text string, codepoints count returned by parameter.
+pub const loadCodepoints = text.loadCodepoints;
+/// Unload codepoints data from memory.
+pub const unloadCodepoints = text.unloadCodepoints;
+/// Get total number of codepoints in a UTF-8 encoded string.
+pub const getCodepointCount = text.getCodepointCount;
+/// Get next codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure.
+pub const getCodepoint = text.getCodepoint;
+/// Get next codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure.
+pub const getCodepointNext = text.getCodepointNext;
+/// Get previous codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure.
+pub const getCodepointPrevious = text.getCodepointPrevious;
+/// Encode one codepoint into UTF-8 byte array (array length returned as parameter).
+pub const codepointToUTF8 = text.codepointToUTF8;
+/// Load text as separate lines ('\n').
+pub const loadTextLines = text.loadTextLines;
+/// Unload text lines.
+pub const unloadTextLines = text.unloadTextLines;
+/// Copy one string to another, returns bytes copied.
+pub const textCopy = text.textCopy;
+/// Check if two text strings are equal.
+pub const textIsEqual = text.textIsEqual;
+/// Get text length, checks for '\0' ending.
+pub const textLength = text.textLength;
+/// Text formatting with variables (sprintf() style).
+pub const textFormat = text.textFormat;
+/// Get a piece of a text string.
+pub const textSubtext = text.textSubtext;
+/// Remove text spaces, concat words.
+pub const textRemoveSpaces = text.textRemoveSpaces;
+/// Get text between two strings.
+pub const getTextBetween = text.getTextBetween;
+/// Replace text string with new string.
+pub const textReplace = text.textReplace;
+/// Replace text string with new string, memory must be MemFree().
+pub const textReplaceAlloc = text.textReplaceAlloc;
+/// Replace text between two specific strings.
+pub const textReplaceBetween = text.textReplaceBetween;
+/// Replace text between two specific strings, memory must be MemFree().
+pub const textReplaceBetweenAlloc = text.textReplaceBetweenAlloc;
+/// Insert text in a defined byte position.
+pub const textInsert = text.textInsert;
+/// Insert text in a defined byte position, memory must be MemFree().
+pub const textInsertAlloc = text.textInsertAlloc;
+/// Join text strings with delimiter.
+pub const textJoin = text.textJoin;
+/// Split text into multiple strings, using MAX_TEXTSPLIT_COUNT static strings.
+pub const textSplit = text.textSplit;
+/// Append text at specific position and move cursor.
+pub const textAppend = text.textAppend;
+/// Find first text occurrence within a string, -1 if not found.
+pub const textFindIndex = text.textFindIndex;
+/// Get upper case version of provided string.
+pub const textToUpper = text.textToUpper;
+/// Get lower case version of provided string.
+pub const textToLower = text.textToLower;
+/// Get Pascal case notation version of provided string.
+pub const textToPascal = text.textToPascal;
+/// Get Snake case notation version of provided string.
+pub const textToSnake = text.textToSnake;
+/// Get Camel case notation version of provided string.
+pub const textToCamel = text.textToCamel;
+/// Get integer value from text.
+pub const textToInteger = text.textToInteger;
+/// Get float value from text.
+pub const textToFloat = text.textToFloat;
 
 // raylib's models module.
 
