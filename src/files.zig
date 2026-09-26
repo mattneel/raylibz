@@ -1035,4 +1035,9 @@ test "files: automation event lists load, export and play" {
     try std.testing.expect(c.IsKeyDown(65));
     playAutomationEvent(.{ .frame = 0, .type = 1, .params = .{ 65, 0, 0, 0 } });
     try std.testing.expect(!c.IsKeyDown(65));
+    // The key down also queued KEY_A as pressed, and a key up does not dequeue it
+    // (rcore.c's PlayAutomationEvent). raylib's input state is every test's, so
+    // take back what this test put there.
+    try std.testing.expectEqual(@as(c_int, 65), c.GetKeyPressed());
+    try std.testing.expectEqual(@as(c_int, 0), c.GetKeyPressed());
 }
