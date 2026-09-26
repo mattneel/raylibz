@@ -591,6 +591,11 @@ pub fn getRayCollisionSphere(ray: Ray, center: Vector3, radius: f32) RayCollisio
 }
 
 /// Get collision info between ray and box
+///
+/// raylib computes a hit point and a normal even for a ray that misses — it
+/// divides by each direction component to do it — so a ray with a zero
+/// component that misses reaches raylib's own `(int)` cast of a NaN, which a
+/// debug build (the default) traps. On a miss, only `hit` is meaningful.
 pub fn getRayCollisionBox(ray: Ray, box: BoundingBox) RayCollision {
     return cast.as(RayCollision, c.GetRayCollisionBox(cast.as(c.Ray, ray), cast.as(c.BoundingBox, box)));
 }
