@@ -13,8 +13,8 @@
     // the translated modules it publishes. Pinned by commit: there are no tags.
     .dependencies = .{
         .raylib = .{
-            .url = "https://github.com/mattneel/raylib/archive/f0e501203d18f9c254fbabca353d08b8f4c698ac.tar.gz",
-            .hash = "raylib-6.0.0-whq8uBJaNAXgXWKp-U7XcOlk6bTiD7YT2Z7k8ecsN5Kd",
+            .url = "https://github.com/mattneel/raylib/archive/64d8418c9becf5f22074da8802c83dd50b8cd294.tar.gz",
+            .hash = "raylib-6.0.0-whq8uOFdNAV25mtvG8ZoFyRQNRs4HM9eUh2PuwJTc1GV",
         },
     },
 

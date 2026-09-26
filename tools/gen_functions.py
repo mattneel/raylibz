@@ -8,7 +8,7 @@ import re
 import sys
 
 # The raylib these counts were taken from; bump both together when the pin moves.
-PINNED_COMMIT = "f0e501203d18f9c254fbabca353d08b8f4c698ac"
+PINNED_COMMIT = "64d8418c9becf5f22074da8802c83dd50b8cd294"
 PINNED_VERSION = "raylib 6.1-dev"
 
 # Per-module RLAPI counts as declared by raylib.h's own section headers.
