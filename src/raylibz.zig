@@ -250,6 +250,100 @@ pub const drawText = text.drawText;
 
 // raymath's free functions.
 
+/// Clamp float value
+pub const clamp = math.clamp;
+
+/// Calculate linear interpolation between two floats
+pub const lerp = math.lerp;
+
+/// Normalize input value within input range
+pub const normalize = math.normalize;
+
+/// Remap input value within input range to output range
+pub const remap = math.remap;
+
+/// Wrap input value from min to max
+pub const wrap = math.wrap;
+
+/// Check whether two given floats are almost equal
+pub const floatEquals = math.floatEquals;
+
+/// Add two quaternions
+pub const quaternionAdd = math.quaternionAdd;
+
+/// Add quaternion and float value
+pub const quaternionAddValue = math.quaternionAddValue;
+
+/// Subtract two quaternions
+pub const quaternionSubtract = math.quaternionSubtract;
+
+/// Subtract quaternion and float value
+pub const quaternionSubtractValue = math.quaternionSubtractValue;
+
+/// Get identity quaternion
+pub const quaternionIdentity = math.quaternionIdentity;
+
+/// Computes the length of a quaternion
+pub const quaternionLength = math.quaternionLength;
+
+/// Normalize provided quaternion
+pub const quaternionNormalize = math.quaternionNormalize;
+
+/// Invert provided quaternion
+pub const quaternionInvert = math.quaternionInvert;
+
+/// Calculate two quaternion multiplication
+pub const quaternionMultiply = math.quaternionMultiply;
+
+/// Scale quaternion by float value
+pub const quaternionScale = math.quaternionScale;
+
+/// Divide two quaternions
+pub const quaternionDivide = math.quaternionDivide;
+
+/// Calculate linear interpolation between two quaternions
+pub const quaternionLerp = math.quaternionLerp;
+
+/// Calculate slerp-optimized interpolation between two quaternions
+pub const quaternionNlerp = math.quaternionNlerp;
+
+/// Calculates spherical linear interpolation between two quaternions
+pub const quaternionSlerp = math.quaternionSlerp;
+
+/// Calculate quaternion cubic spline interpolation using Cubic Hermite Spline algorithm
+/// as described in the GLTF 2.0 specification: https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#interpolation-cubic
+pub const quaternionCubicHermiteSpline = math.quaternionCubicHermiteSpline;
+
+/// Calculate quaternion based on the rotation from one vector to another
+pub const quaternionFromVector3ToVector3 = math.quaternionFromVector3ToVector3;
+
+/// Get a quaternion for a given rotation matrix
+pub const quaternionFromMatrix = math.quaternionFromMatrix;
+
+/// Get a matrix for a given quaternion
+pub const quaternionToMatrix = math.quaternionToMatrix;
+
+/// Get rotation quaternion for an angle and axis
+/// NOTE: Angle must be provided in radians
+pub const quaternionFromAxisAngle = math.quaternionFromAxisAngle;
+
+/// Get the rotation angle and axis for a given quaternion
+pub const quaternionToAxisAngle = math.quaternionToAxisAngle;
+
+/// Get the quaternion equivalent to Euler angles
+/// NOTE: Rotation order is ZYX
+pub const quaternionFromEuler = math.quaternionFromEuler;
+
+/// Get the Euler angles equivalent to quaternion (roll, pitch, yaw)
+/// NOTE: Angles are returned in a Vector3 struct in radians
+pub const quaternionToEuler = math.quaternionToEuler;
+
+/// Transform a quaternion given a transformation matrix
+pub const quaternionTransform = math.quaternionTransform;
+
+/// Check whether two given quaternions are almost equal
+pub const quaternionEquals = math.quaternionEquals;
+
 // Everything `zig build test` runs here: this file's re-export test, and the
 // unit tests of every file the package publishes.
 test {
