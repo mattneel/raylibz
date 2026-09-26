@@ -1,0 +1,33 @@
+.{
+    .name = .raylibz,
+    // raylib is at 6.1-dev (raylib.h's RAYLIB_VERSION), so raylibz is too. This
+    // is package metadata only; Live at Head means nothing is tagged.
+    .version = "6.1.0-dev",
+    // The Zig++ release this package is built and tested with. Zig++'s version
+    // dispatch runs exactly this compiler inside this tree.
+    .minimum_zig_version = "0.17.0-dev.2453+zigpp.35608841b",
+
+    .fingerprint = 0x1c692ef423502e, // Changing this has security and trust implications.
+
+    // raylib's C sources, its own build.zig (ported to Zig++'s build API) and
+    // the translated modules it publishes. Pinned by commit: there are no tags.
+    .dependencies = .{
+        .raylib = .{
+            .url = "https://github.com/mattneel/raylib/archive/f0e501203d18f9c254fbabca353d08b8f4c698ac.tar.gz",
+            .hash = "raylib-6.0.0-whq8uBJaNAXgXWKp-U7XcOlk6bTiD7YT2Z7k8ecsN5Kd",
+        },
+    },
+
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+        "tests",
+        "examples",
+        "tools",
+        "README.md",
+        "CHANGELOG.md",
+        "LICENSE",
+        "NOTICE",
+    },
+}

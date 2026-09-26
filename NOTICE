@@ -1,0 +1,78 @@
+raylibz: notices and attribution
+================================
+
+raylibz is licensed under the zlib license; see LICENSE. It is a wrapper, and
+everything it wraps is raylib's, so raylib's notice and attribution follow.
+
+raylib
+------
+
+raylib is Copyright (c) 2013-2026 Ramon Santamaria (@raysan5) and its
+contributors: https://github.com/raysan5/raylib
+
+raylib is distributed under the zlib license, reproduced here in full, as the
+license requires of any distribution of the software or of a modified version
+of it:
+
+    Copyright (c) 2013-2026 Ramon Santamaria (@raysan5)
+
+    This software is provided "as-is", without any express or implied warranty. In no event
+    will the authors be held liable for any damages arising from the use of this software.
+
+    Permission is granted to anyone to use this software for any purpose, including commercial
+    applications, and to alter it and redistribute it freely, subject to the following restrictions:
+
+      1. The origin of this software must not be misrepresented; you must not claim that you
+      wrote the original software. If you use this software in a product, an acknowledgment
+      in the product documentation would be appreciated but is not required.
+
+      2. Altered source versions must be plainly marked as such, and must not be misrepresented
+      as being the original software.
+
+      3. This notice may not be removed or altered from any source distribution.
+
+What raylibz takes from raylib, and how:
+
+* **The library itself.** raylibz does not vendor, patch or fork raylib. It
+  depends on it, pinned by commit, and links the artifact raylib's own build
+  script produces. raylib's `raylib.h`, `rcamera.h`, `raymath.h` and `rlgl.h`
+  reach a raylibz user through raylib's own translation step, unmodified.
+
+* **The names and declarations.** `src/enums.zig`, `src/types.zig`,
+  `src/vector2.zig`, `src/vector3.zig`, `src/vector4.zig`, `src/matrix.zig` and
+  `tests/functions.zig` are derived from `raylib.h` and `raymath.h`: every
+  struct, field, enum, constant value, colour and function name is raylib's, and
+  each mirror asserts that it is at compile time. The one-line documentation
+  comments on the wrappers are raylib's own comments from `raylib.h`.
+
+* **The example.** `examples/basic_window.zig` is a port of raylib's
+  `examples/core/core_basic_window.c` and keeps raylib's example header notice,
+  including its copyright line, at the top of the file.
+
+The fork
+--------
+
+raylibz pins this raylib fork, by commit (Live at Head: nothing is tagged):
+
+    https://github.com/mattneel/raylib
+    branch zigpp, commit f0e501203d18f9c254fbabca353d08b8f4c698ac
+
+It is raysan5/raylib's `master` at `fafa2cea97` (RAYLIB_VERSION "6.1-dev",
+432 commits past the 6.0 tag) with one change: raylib's `build.zig` and
+`build.zig.zon` are ported to Zig++'s `std.Build` API, so that raylib builds
+with Zig++ and publishes the translations of its headers as the modules `raylib`,
+`rcamera`, `raymath` and `rlgl`. raylib's C sources and public headers are
+unchanged, and the fork's `build.zig` carries its own "ALTERED FOR ZIG++" note
+saying so. raylibz's own dependency entry names the commit tarball and its hash;
+`tests/functions.zig` records the same commit, so a bump is a visible, reviewed
+change.
+
+raylib-zig
+----------
+
+raylibz's shape owes a great deal to raylib-zig by Nikolas Wipper (Not-Nik) and
+its contributors, MIT-licensed: https://github.com/raylib-zig/raylib-zig. It came
+first, and it does most of this well. raylibz differs in where the C
+declarations come from: raylib-zig maintains its own generated extern
+declarations, while raylibz keeps none and wraps raylib's own translation,
+proving the wrapper against it at compile time.
