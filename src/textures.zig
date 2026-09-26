@@ -472,7 +472,7 @@ pub fn getImageAlphaBorder(image: Image, threshold: f32) Rectangle {
 
 /// Get image pixel color at (x, y) position
 ///
-/// A position outside the image comes back as black, as raylib does.
+/// A position outside the image comes back as raylib's zeroed colour, `Color.blank`.
 pub fn getImageColor(image: Image, x: i32, y: i32) Color {
     return cast.as(Color, c.GetImageColor(cast.as(c.Image, image), x, y));
 }
@@ -990,10 +990,25 @@ pub fn getPixelDataSize(width: i32, height: i32, format: PixelFormat) i32 {
 /// and call nothing but raylib.
 const internal = struct {
     const std = @import("std");
+
+    /// raylib's TraceLog writes to stdout, which under `zig build test` is the
+    /// build runner's own protocol pipe: a test that lets raylib log hangs the
+    /// build. Every test here that calls a raylib function that can log starts
+    /// with this and puts the level back when it ends.
+    fn silenceLog() void {
+        c.SetTraceLogLevel(c.LOG_NONE);
+    }
+
+    /// raylib's level as it was found: its own default, `LOG_INFO`.
+    fn restoreLog() void {
+        c.SetTraceLogLevel(c.LOG_INFO);
+    }
 };
 
 test "genImageColor: the image and its colours are the ones raylib builds" {
     const std = internal.std;
+    internal.silenceLog();
+    defer internal.restoreLog();
 
     const image = genImageColor(8, 4, Color.red);
     defer unloadImage(image);
@@ -1009,11 +1024,14 @@ test "genImageColor: the image and its colours are the ones raylib builds" {
     for (colors) |color| try std.testing.expect(colorIsEqual(color, Color.red));
 
     try std.testing.expect(colorIsEqual(getImageColor(image, 7, 3), Color.red));
-    try std.testing.expect(colorIsEqual(getImageColor(image, 8, 3), Color.black)); // Out of bounds, as raylib answers.
+    // A position outside the image is raylib's zeroed colour, not `Color.black`.
+    try std.testing.expect(colorIsEqual(getImageColor(image, 8, 3), Color.blank));
 }
 
 test "genImageText: text bytes become grayscale pixels" {
     const std = internal.std;
+    internal.silenceLog();
+    defer internal.restoreLog();
 
     const image = genImageText(4, 2, "abcdefgh");
     defer unloadImage(image);
@@ -1030,6 +1048,8 @@ test "genImageText: text bytes become grayscale pixels" {
 
 test "imageResize, imageCrop and imageFlipVertical change the image in place" {
     const std = internal.std;
+    internal.silenceLog();
+    defer internal.restoreLog();
 
     var image = genImageColor(4, 4, Color.red);
     defer unloadImage(image);
@@ -1051,6 +1071,8 @@ test "imageResize, imageCrop and imageFlipVertical change the image in place" {
 
 test "imageDrawLineStrip: the slice is the point list raylib walks" {
     const std = internal.std;
+    internal.silenceLog();
+    defer internal.restoreLog();
 
     var image = genImageColor(8, 8, Color.black);
     defer unloadImage(image);
@@ -1068,6 +1090,8 @@ test "imageDrawLineStrip: the slice is the point list raylib walks" {
 
 test "loadImagePalette: the slice is the colours raylib counted" {
     const std = internal.std;
+    internal.silenceLog();
+    defer internal.restoreLog();
 
     const image = genImageChecked(8, 8, 4, 4, Color.red, Color.blue);
     defer unloadImage(image);
@@ -1087,6 +1111,8 @@ test "loadImagePalette: the slice is the colours raylib counted" {
 
 test "exportImageToMemory round trips through loadImageFromMemory" {
     const std = internal.std;
+    internal.silenceLog();
+    defer internal.restoreLog();
 
     const image = genImageChecked(16, 16, 4, 4, Color.red, Color.gold);
     defer unloadImage(image);
@@ -1111,8 +1137,51 @@ test "exportImageToMemory round trips through loadImageFromMemory" {
     try std.testing.expectError(error.LoadFailed, loadImage("no/such/image.png"));
 }
 
+test "loadImageAnim's frames struct: a still image is one frame" {
+    const std = internal.std;
+    internal.silenceLog();
+    defer internal.restoreLog();
+
+    var tmp = std.testing.tmpDir(.{});
+    defer tmp.cleanup();
+    // std.testing.tmpDir makes `.zig-cache/tmp/<random>` under the working
+    // directory, so that relative path is the same file `tmp.dir` holds.
+    var path_buffer: [160]u8 = undefined;
+    const path_plain = try std.fmt.bufPrint(&path_buffer, ".zig-cache/tmp/{s}/textures.png", .{tmp.sub_path[0..]});
+    path_buffer[path_plain.len] = 0;
+    const path: [:0]const u8 = path_buffer[0..path_plain.len :0];
+
+    const image = genImageChecked(8, 8, 2, 2, Color.red, Color.gold);
+    defer unloadImage(image);
+    try std.testing.expect(exportImage(image, path));
+
+    const from_file = try loadImage(path);
+    defer unloadImage(from_file);
+    try std.testing.expectEqual(image.width, from_file.width);
+    try std.testing.expectEqual(image.height, from_file.height);
+
+    // raylib's LoadImageAnim falls back to LoadImage for a still image, and
+    // counts the frames it appended: one.
+    const animation = try loadImageAnim(path);
+    defer unloadImage(animation.image);
+    try std.testing.expectEqual(@as(i32, 1), animation.frames);
+    try std.testing.expectEqual(@as(i32, 8), animation.image.width);
+    try std.testing.expect(colorIsEqual(getImageColor(animation.image, 0, 0), Color.red));
+
+    // The same bytes through the memory loader, whose dataSize is the slice's
+    // length.
+    const bytes = exportImageToMemory(image, ".png") orelse return error.TestUnexpectedResult;
+    defer c.MemFree(bytes.ptr);
+    const from_memory = try loadImageAnimFromMemory(".png", bytes);
+    defer unloadImage(from_memory.image);
+    try std.testing.expectEqual(@as(i32, 1), from_memory.frames);
+    try std.testing.expectEqual(@as(i32, 8), from_memory.image.height);
+}
+
 test "getPixelDataSize: raylib's byte counts for a format" {
     const std = internal.std;
+    internal.silenceLog();
+    defer internal.restoreLog();
 
     const rgba: PixelFormat = .pixelformat_uncompressed_r8g8b8a8;
     try std.testing.expectEqual(@as(i32, 4 * 4 * 4), getPixelDataSize(4, 4, rgba));
@@ -1128,6 +1197,8 @@ test "getPixelDataSize: raylib's byte counts for a format" {
 
 test "colour conversions: raylib's own arithmetic, through the mirror" {
     const std = internal.std;
+    internal.silenceLog();
+    defer internal.restoreLog();
 
     try std.testing.expect(colorIsEqual(Color.red, Color.red));
     try std.testing.expect(!colorIsEqual(Color.red, Color.blue));
@@ -1166,6 +1237,8 @@ test "colour conversions: raylib's own arithmetic, through the mirror" {
 
 test "getPixelColor and setPixelColor: the pixel pointer crosses as it is" {
     const std = internal.std;
+    internal.silenceLog();
+    defer internal.restoreLog();
 
     var pixel = [_]u8{ 0, 0, 0, 0 };
     setPixelColor(&pixel, Color.red, .pixelformat_uncompressed_r8g8b8a8);
@@ -1173,6 +1246,6 @@ test "getPixelColor and setPixelColor: the pixel pointer crosses as it is" {
     try std.testing.expect(colorIsEqual(getPixelColor(&pixel, .pixelformat_uncompressed_r8g8b8a8), Color.red));
 
     var gray = [_]u8{ 0, 0 };
-    setPixelColor(&gray, .{ .r = 10, .g = 20, .b = 30, .a = 40 }, .pixelformat_uncompressed_gray_alpha);
-    try std.testing.expectEqualSlices(u8, &.{ 10, 40 }, &gray);
+    setPixelColor(&gray, .{ .r = 255, .g = 255, .b = 255, .a = 40 }, .pixelformat_uncompressed_gray_alpha);
+    try std.testing.expectEqualSlices(u8, &.{ 255, 40 }, &gray);
 }

@@ -45,7 +45,6 @@ pub fn main(init: std.process.Init) !void {
 
     // NOTE: Textures MUST be loaded after Window initialization (OpenGL context is required)
     const texture = try raylibz.loadTexture("resources/raybunny.png"); // Texture loading
-    defer raylibz.unloadTexture(texture); // Texture unloading
 
     raylibz.setTargetFPS(60); // Set our game to run at 60 frames-per-second
 
@@ -77,6 +76,8 @@ pub fn main(init: std.process.Init) !void {
         }
     }
 
+    // De-Initialization
+    raylibz.unloadTexture(texture); // Texture unloading
     raylibz.closeWindow(); // Close window and OpenGL context
 
     // CI reads this line: it is the only thing a headless run can be asked for.
