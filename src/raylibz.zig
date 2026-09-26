@@ -233,6 +233,127 @@ pub const clearBackground = core.clearBackground;
 
 // raylib's core module: files, compression, automation events.
 
+/// Load file data as byte array (read)
+pub const loadFileData = files.loadFileData;
+/// Unload file data allocated by `loadFileData`
+pub const unloadFileData = files.unloadFileData;
+/// Save data to file from byte array (write), returns true on success
+pub const saveFileData = files.saveFileData;
+/// Export data to code (.h), returns true on success
+pub const exportDataAsCode = files.exportDataAsCode;
+/// Load text data from file (read), returns a '\0' terminated string
+pub const loadFileText = files.loadFileText;
+/// Unload file text data allocated by `loadFileText`
+pub const unloadFileText = files.unloadFileText;
+/// Save text data to file (write), string must be '\0' terminated, returns true on success
+pub const saveFileText = files.saveFileText;
+/// Set custom file binary data loader
+pub const setLoadFileDataCallback = files.setLoadFileDataCallback;
+/// Set custom file binary data saver
+pub const setSaveFileDataCallback = files.setSaveFileDataCallback;
+/// Set custom file text data loader
+pub const setLoadFileTextCallback = files.setLoadFileTextCallback;
+/// Set custom file text data saver
+pub const setSaveFileTextCallback = files.setSaveFileTextCallback;
+/// Rename file (if exists), returns 0 on success
+pub const fileRename = files.fileRename;
+/// Remove file (if exists), returns 0 on success
+pub const fileRemove = files.fileRemove;
+/// Copy file from one path to another, dstPath created if it doesn't exist, returns 0 on success
+pub const fileCopy = files.fileCopy;
+/// Move file from one directory to another, dstPath created if it doesn't exist, returns 0 on success
+pub const fileMove = files.fileMove;
+/// Replace text in an existing file, returns 0 on success
+pub const fileTextReplace = files.fileTextReplace;
+/// Find text in existing file, returns -1 if index not found or index otherwise
+pub const fileTextFindIndex = files.fileTextFindIndex;
+/// Check if file exists
+pub const fileExists = files.fileExists;
+/// Check if directory path exists
+pub const directoryExists = files.directoryExists;
+/// Check file extension (recommended include point: .png, .wav)
+pub const isFileExtension = files.isFileExtension;
+/// Check if file path (file or directory) is hidden by OS
+pub const isFileHidden = files.isFileHidden;
+/// Get file length in bytes (NOTE: GetFileSize() conflicts with windows.h)
+pub const getFileLength = files.getFileLength;
+/// Get file modification time (last write time)
+pub const getFileModTime = files.getFileModTime;
+/// Get pointer to extension for a filename string (includes dot: '.png')
+pub const getFileExtension = files.getFileExtension;
+/// Get pointer to filename for a path string
+pub const getFileName = files.getFileName;
+/// Get filename string without extension (uses static string)
+pub const getFileNameWithoutExt = files.getFileNameWithoutExt;
+/// Get full path for a provided fileName with path (uses static string)
+pub const getDirectoryPath = files.getDirectoryPath;
+/// Get previous directory path for a provided path (uses static string)
+pub const getPrevDirectoryPath = files.getPrevDirectoryPath;
+/// Get current working directory (uses static string)
+pub const getWorkingDirectory = files.getWorkingDirectory;
+/// Get the directory of the running application (uses static string)
+pub const getApplicationDirectory = files.getApplicationDirectory;
+/// Create directories (including full path requested), returns 0 on success
+pub const makeDirectory = files.makeDirectory;
+/// Change working directory, returns 0 on success
+pub const changeDirectory = files.changeDirectory;
+/// Check if provided path points to a file
+pub const isPathFile = files.isPathFile;
+/// Check if provided path points to a directory
+pub const isPathDirectory = files.isPathDirectory;
+/// Check if provided path is an absolute path
+pub const isPathAbsolute = files.isPathAbsolute;
+/// Check if fileName is valid for the platform/OS
+pub const isFileNameValid = files.isFileNameValid;
+/// Load directory filepaths, files and directories, no subdirs scan
+pub const loadDirectoryFiles = files.loadDirectoryFiles;
+/// Load directory filepaths with extension filtering and subdir scan; some filters available: '*.*','FILES*','DIRS*'
+pub const loadDirectoryFilesEx = files.loadDirectoryFilesEx;
+/// Unload filepaths
+pub const unloadDirectoryFiles = files.unloadDirectoryFiles;
+/// Check if file has been dropped into window
+pub const isFileDropped = files.isFileDropped;
+/// Load dropped filepaths
+pub const loadDroppedFiles = files.loadDroppedFiles;
+/// Unload dropped filepaths
+pub const unloadDroppedFiles = files.unloadDroppedFiles;
+/// Get the file count in a directory
+pub const getDirectoryFileCount = files.getDirectoryFileCount;
+/// Get the file count in a directory with extension filtering and recursive directory scan. Use 'DIR' in the filter string to include directories in the result
+pub const getDirectoryFileCountEx = files.getDirectoryFileCountEx;
+/// Compress data (DEFLATE algorithm), memory must be MemFree()
+pub const compressData = files.compressData;
+/// Decompress data (DEFLATE algorithm), memory must be MemFree()
+pub const decompressData = files.decompressData;
+/// Encode data to Base64 string (includes NULL terminator), memory must be MemFree()
+pub const encodeDataBase64 = files.encodeDataBase64;
+/// Decode Base64 string (expected NULL terminated), memory must be MemFree()
+pub const decodeDataBase64 = files.decodeDataBase64;
+/// Compute CRC32 hash code
+pub const computeCRC32 = files.computeCRC32;
+/// Compute MD5 hash code, returns static int[4] (16 bytes)
+pub const computeMD5 = files.computeMD5;
+/// Compute SHA1 hash code, returns static int[5] (20 bytes)
+pub const computeSHA1 = files.computeSHA1;
+/// Compute SHA256 hash code, returns static int[8] (32 bytes)
+pub const computeSHA256 = files.computeSHA256;
+/// Load automation events list from file, NULL for empty list, capacity = MAX_AUTOMATION_EVENTS
+pub const loadAutomationEventList = files.loadAutomationEventList;
+/// Unload automation events list from file
+pub const unloadAutomationEventList = files.unloadAutomationEventList;
+/// Export automation events list as text file
+pub const exportAutomationEventList = files.exportAutomationEventList;
+/// Set automation event list to record to
+pub const setAutomationEventList = files.setAutomationEventList;
+/// Set automation event internal base frame to start recording
+pub const setAutomationEventBaseFrame = files.setAutomationEventBaseFrame;
+/// Start recording automation events (AutomationEventList must be set)
+pub const startAutomationEventRecording = files.startAutomationEventRecording;
+/// Stop recording automation events
+pub const stopAutomationEventRecording = files.stopAutomationEventRecording;
+/// Play a recorded automation event
+pub const playAutomationEvent = files.playAutomationEvent;
+
 // raylib's input handling, gestures and camera.
 
 // raylib's shapes module.
