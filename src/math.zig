@@ -16,6 +16,8 @@
 //! file imports only names the root also publishes (`raymath`, `cast`, the
 //! vector files), because the root's re-export test requires every top-level
 //! declaration here to exist in `raylibz` too.
+//! Private helpers go in a `const internal = struct { ... };`, which that test
+//! skips.
 
 const raymath = @import("raymath");
 const cast = @import("cast.zig");

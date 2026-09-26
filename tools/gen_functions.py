@@ -25,8 +25,13 @@ EXPECTED_MODULES = {
 EXPECTED_RAYLIB = sum(EXPECTED_MODULES.values())  # 619
 EXPECTED_RAYMATH = 146
 
-# raygui-style sections that raylib.h keeps in its own file but raylibz wraps in core.zig.
-FILE_OVERRIDES = {"rgestures": "core", "rcamera": "core"}
+# raylib.h's core module is split over three raylibz files, by raylib.h's own section comments:
+# core.zig up to "File system management functions", files.zig from there (files, file callbacks,
+# compression, automation events), and input.zig for "Input Handling Functions (Module: core)" and
+# the rgestures and rcamera sections.
+FILES_SECTION = "File system management functions"
+INPUT_HEADER = "Input Handling Functions"
+FILE_OVERRIDES = {"rgestures": "input", "rcamera": "input"}
 
 MODULE_HEADER_RE = re.compile(r"\(\s*Module:\s*([A-Za-z_][A-Za-z0-9_]*)\s*\)")
 IDENT_RE = re.compile(r"([A-Za-z_][A-Za-z0-9_]*)\s*$")
@@ -66,21 +71,25 @@ def declared_name(declarator, path, lineno, macro):
 
 
 def parse_raylib(path):
-    """[(name, module)] for every RLAPI declaration of raylib.h, in declaration order."""
+    """[(name, module, file)] for every RLAPI declaration of raylib.h, in declaration order."""
     functions = []
     module = None
+    file = None
     with open(path, encoding="utf-8") as handle:
         for lineno, line in enumerate(handle, 1):
             if line.lstrip().startswith("//"):
                 match = MODULE_HEADER_RE.search(line)
                 if match:
                     module = match.group(1)
+                    file = "input" if INPUT_HEADER in line else FILE_OVERRIDES.get(module, module)
                     continue
+                if module == "core" and FILES_SECTION in line:
+                    file = "files"
             if not line.startswith("RLAPI"):
                 continue
             if module is None:
                 die(f"{path}:{lineno}: RLAPI declaration before any `(Module: ...)` section header")
-            functions.append((declared_name(line[len("RLAPI"):], path, lineno, "RLAPI"), module))
+            functions.append((declared_name(line[len("RLAPI"):], path, lineno, "RLAPI"), module, file))
     return functions
 
 
@@ -97,7 +106,7 @@ def parse_raymath(path):
 
 def check_raylib(functions):
     counts = {}
-    for _, module in functions:
+    for _, module, _ in functions:
         counts[module] = counts.get(module, 0) + 1
     problems = []
     for module, expected in EXPECTED_MODULES.items():
@@ -108,7 +117,7 @@ def check_raylib(functions):
         problems.append(f"unknown module `{module}` with {counts[module]} functions")
     if len(functions) != EXPECTED_RAYLIB:
         problems.append(f"total: expected {EXPECTED_RAYLIB}, found {len(functions)}")
-    names = [name for name, _ in functions]
+    names = [name for name, _, _ in functions]
     duplicates = sorted({name for name in names if names.count(name) > 1})
     if duplicates:
         problems.append(f"duplicate declarations: {', '.join(duplicates)}")
@@ -136,8 +145,7 @@ def render(functions, raymath_names):
     out = [HEADER]
     out.append("\n/// Every RLAPI function of the pinned raylib.h, in declaration order.\n")
     out.append(f"pub const raylib: [{len(functions)}]Function = .{{\n")
-    for name, module in functions:
-        file = FILE_OVERRIDES.get(module, module)
+    for name, module, file in functions:
         out.append(f'    .{{ .name = "{name}", .module = "{module}", .file = "{file}" }},\n')
     out.append("};\n")
     out.append("\n/// Every RMAPI function of the pinned raymath.h, in declaration order.\n")
