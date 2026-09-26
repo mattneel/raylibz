@@ -248,6 +248,139 @@ pub const drawText = text.drawText;
 
 // raylib's audio module.
 
+/// Initialize audio device and context.
+pub const initAudioDevice = audio.initAudioDevice;
+/// Close the audio device and context.
+pub const closeAudioDevice = audio.closeAudioDevice;
+/// Check if audio device has been initialized successfully.
+pub const isAudioDeviceReady = audio.isAudioDeviceReady;
+/// Set master volume (listener).
+pub const setMasterVolume = audio.setMasterVolume;
+/// Get master volume (listener).
+pub const getMasterVolume = audio.getMasterVolume;
+/// Load wave data from file.
+pub const loadWave = audio.loadWave;
+/// Load wave from memory buffer, fileType refers to extension: i.e. '.wav'.
+pub const loadWaveFromMemory = audio.loadWaveFromMemory;
+/// Check if wave data is valid (data loaded and parameters).
+pub const isWaveValid = audio.isWaveValid;
+/// Load sound from file.
+pub const loadSound = audio.loadSound;
+/// Load sound from wave data.
+pub const loadSoundFromWave = audio.loadSoundFromWave;
+/// Load sound alias, new sound that shares the same sample data as the source sound, does not own the sound data.
+pub const loadSoundAlias = audio.loadSoundAlias;
+/// Check if sound is valid (context and buffers initialized).
+pub const isSoundValid = audio.isSoundValid;
+/// Update sound buffer with new data (default data format: 32 bit float, stereo).
+pub const updateSound = audio.updateSound;
+/// Unload wave data.
+pub const unloadWave = audio.unloadWave;
+/// Unload sound.
+pub const unloadSound = audio.unloadSound;
+/// Unload sound alias (does not deallocate sample data).
+pub const unloadSoundAlias = audio.unloadSoundAlias;
+/// Export wave data to file, returns true on success.
+pub const exportWave = audio.exportWave;
+/// Export wave sample data to code (.h), returns true on success.
+pub const exportWaveAsCode = audio.exportWaveAsCode;
+/// Play a sound.
+pub const playSound = audio.playSound;
+/// Stop playing a sound.
+pub const stopSound = audio.stopSound;
+/// Pause a sound.
+pub const pauseSound = audio.pauseSound;
+/// Resume a paused sound.
+pub const resumeSound = audio.resumeSound;
+/// Check if sound is currently playing.
+pub const isSoundPlaying = audio.isSoundPlaying;
+/// Set volume for a sound (1.0 is max level).
+pub const setSoundVolume = audio.setSoundVolume;
+/// Set pitch for a sound (1.0 is base level).
+pub const setSoundPitch = audio.setSoundPitch;
+/// Set pan for a sound (-1.0 left, 0.0 center, 1.0 right).
+pub const setSoundPan = audio.setSoundPan;
+/// Copy a wave to a new wave.
+pub const waveCopy = audio.waveCopy;
+/// Crop a wave to defined frames range.
+pub const waveCrop = audio.waveCrop;
+/// Convert wave data to desired format.
+pub const waveFormat = audio.waveFormat;
+/// Load samples data from wave as a 32bit float data array.
+pub const loadWaveSamples = audio.loadWaveSamples;
+/// Unload samples data loaded with LoadWaveSamples().
+pub const unloadWaveSamples = audio.unloadWaveSamples;
+/// Load music stream from file.
+pub const loadMusicStream = audio.loadMusicStream;
+/// Load music stream from data.
+pub const loadMusicStreamFromMemory = audio.loadMusicStreamFromMemory;
+/// Check if music stream is valid (context and buffers initialized).
+pub const isMusicValid = audio.isMusicValid;
+/// Unload music stream.
+pub const unloadMusicStream = audio.unloadMusicStream;
+/// Start music playing.
+pub const playMusicStream = audio.playMusicStream;
+/// Check if music is playing.
+pub const isMusicStreamPlaying = audio.isMusicStreamPlaying;
+/// Update buffers for music streaming.
+pub const updateMusicStream = audio.updateMusicStream;
+/// Stop music playing.
+pub const stopMusicStream = audio.stopMusicStream;
+/// Pause music playing.
+pub const pauseMusicStream = audio.pauseMusicStream;
+/// Resume playing paused music.
+pub const resumeMusicStream = audio.resumeMusicStream;
+/// Seek music to a position (in seconds).
+pub const seekMusicStream = audio.seekMusicStream;
+/// Set volume for music (1.0 is max level).
+pub const setMusicVolume = audio.setMusicVolume;
+/// Set pitch for music (1.0 is base level).
+pub const setMusicPitch = audio.setMusicPitch;
+/// Set pan for music (-1.0 left, 0.0 center, 1.0 right).
+pub const setMusicPan = audio.setMusicPan;
+/// Get music time length (in seconds).
+pub const getMusicTimeLength = audio.getMusicTimeLength;
+/// Get current music time played (in seconds).
+pub const getMusicTimePlayed = audio.getMusicTimePlayed;
+/// Load audio stream (to stream raw audio pcm data).
+pub const loadAudioStream = audio.loadAudioStream;
+/// Check if an audio stream is valid (buffers initialized).
+pub const isAudioStreamValid = audio.isAudioStreamValid;
+/// Unload audio stream and free memory.
+pub const unloadAudioStream = audio.unloadAudioStream;
+/// Update audio stream buffers with data.
+pub const updateAudioStream = audio.updateAudioStream;
+/// Check if any audio stream buffers requires refill.
+pub const isAudioStreamProcessed = audio.isAudioStreamProcessed;
+/// Play audio stream.
+pub const playAudioStream = audio.playAudioStream;
+/// Pause audio stream.
+pub const pauseAudioStream = audio.pauseAudioStream;
+/// Resume audio stream.
+pub const resumeAudioStream = audio.resumeAudioStream;
+/// Check if audio stream is playing.
+pub const isAudioStreamPlaying = audio.isAudioStreamPlaying;
+/// Stop audio stream.
+pub const stopAudioStream = audio.stopAudioStream;
+/// Set volume for audio stream (1.0 is max level).
+pub const setAudioStreamVolume = audio.setAudioStreamVolume;
+/// Set pitch for audio stream (1.0 is base level).
+pub const setAudioStreamPitch = audio.setAudioStreamPitch;
+/// Set pan for audio stream (-1.0 left, 0.0 center, 1.0 right).
+pub const setAudioStreamPan = audio.setAudioStreamPan;
+/// Default size for new audio streams.
+pub const setAudioStreamBufferSizeDefault = audio.setAudioStreamBufferSizeDefault;
+/// Audio thread callback to request new data.
+pub const setAudioStreamCallback = audio.setAudioStreamCallback;
+/// Attach audio stream processor to stream, receives frames x 2 samples as 'float' (stereo).
+pub const attachAudioStreamProcessor = audio.attachAudioStreamProcessor;
+/// Detach audio stream processor from stream.
+pub const detachAudioStreamProcessor = audio.detachAudioStreamProcessor;
+/// Attach audio stream processor to the entire audio pipeline, receives frames x 2 samples as 'float' (stereo).
+pub const attachAudioMixedProcessor = audio.attachAudioMixedProcessor;
+/// Detach audio stream processor from the entire audio pipeline.
+pub const detachAudioMixedProcessor = audio.detachAudioMixedProcessor;
+
 // raymath's free functions.
 
 // Everything `zig build test` runs here: this file's re-export test, and the
