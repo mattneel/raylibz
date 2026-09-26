@@ -118,6 +118,11 @@ pub fn build(b: *std.Build) !void {
 
         const run_example = b.addRunArtifact(example);
         run_example.addPassthruArgs();
+        // An example finds its resources as raylib's own examples do, relative
+        // to examples/: `run-texture` loads `resources/raybunny.png`. Without
+        // this, the example would inherit whatever directory `zig build` was
+        // run from.
+        run_example.setCwd(b.path("examples"));
         const run_step = b.step(b.fmt("run-{s}", .{name}), b.fmt("Build and run the {s} example", .{name}));
         run_step.dependOn(&run_example.step);
     }

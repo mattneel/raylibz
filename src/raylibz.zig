@@ -239,6 +239,257 @@ pub const clearBackground = core.clearBackground;
 
 // raylib's textures module.
 
+/// Load image from file into CPU memory (RAM)
+pub const loadImage = textures.loadImage;
+/// Load image from RAW file data
+pub const loadImageRaw = textures.loadImageRaw;
+/// Load image sequence from file (frames appended to image.data)
+pub const loadImageAnim = textures.loadImageAnim;
+/// Load image sequence from memory buffer
+pub const loadImageAnimFromMemory = textures.loadImageAnimFromMemory;
+/// Load image from memory buffer, fileType refers to extension: i.e. '.png'
+pub const loadImageFromMemory = textures.loadImageFromMemory;
+/// Load image from GPU texture data
+pub const loadImageFromTexture = textures.loadImageFromTexture;
+/// Load image from screen buffer (screenshot)
+pub const loadImageFromScreen = textures.loadImageFromScreen;
+/// Check if an image is valid (data and parameters)
+pub const isImageValid = textures.isImageValid;
+/// Unload image from CPU memory (RAM)
+pub const unloadImage = textures.unloadImage;
+/// Export image data to file, returns true on success
+pub const exportImage = textures.exportImage;
+/// Export image to memory buffer, memory must be MemFree()
+pub const exportImageToMemory = textures.exportImageToMemory;
+/// Export image as code file defining an array of bytes, returns true on success
+pub const exportImageAsCode = textures.exportImageAsCode;
+/// Generate image: plain color
+pub const genImageColor = textures.genImageColor;
+/// Generate image: linear gradient, direction in degrees [0..360], 0=Vertical gradient
+pub const genImageGradientLinear = textures.genImageGradientLinear;
+/// Generate image: radial gradient
+pub const genImageGradientRadial = textures.genImageGradientRadial;
+/// Generate image: square gradient
+pub const genImageGradientSquare = textures.genImageGradientSquare;
+/// Generate image: checked
+pub const genImageChecked = textures.genImageChecked;
+/// Generate image: white noise
+pub const genImageWhiteNoise = textures.genImageWhiteNoise;
+/// Generate image: perlin noise
+pub const genImagePerlinNoise = textures.genImagePerlinNoise;
+/// Generate image: cellular algorithm, bigger tileSize means bigger cells
+pub const genImageCellular = textures.genImageCellular;
+/// Generate image: grayscale image from text data
+pub const genImageText = textures.genImageText;
+/// Create an image duplicate (useful for transformations)
+pub const imageCopy = textures.imageCopy;
+/// Create an image from another image piece
+pub const imageFromImage = textures.imageFromImage;
+/// Create an image from a selected channel of another image (GRAYSCALE)
+pub const imageFromChannel = textures.imageFromChannel;
+/// Create an image from text (default font)
+pub const imageText = textures.imageText;
+/// Create an image from text (custom sprite font)
+pub const imageTextEx = textures.imageTextEx;
+/// Convert image data to desired format
+pub const imageFormat = textures.imageFormat;
+/// Convert image to POT (power-of-two)
+pub const imageToPOT = textures.imageToPOT;
+/// Crop an image to a defined rectangle
+pub const imageCrop = textures.imageCrop;
+/// Crop image depending on alpha value
+pub const imageAlphaCrop = textures.imageAlphaCrop;
+/// Clear alpha channel to desired color
+pub const imageAlphaClear = textures.imageAlphaClear;
+/// Apply alpha mask to image
+pub const imageAlphaMask = textures.imageAlphaMask;
+/// Premultiply alpha channel
+pub const imageAlphaPremultiply = textures.imageAlphaPremultiply;
+/// Apply Gaussian blur using a box blur approximation
+pub const imageBlurGaussian = textures.imageBlurGaussian;
+/// Apply custom square convolution kernel to image
+pub const imageKernelConvolution = textures.imageKernelConvolution;
+/// Resize image (Bicubic scaling algorithm)
+pub const imageResize = textures.imageResize;
+/// Resize image (Nearest-Neighbor scaling algorithm)
+pub const imageResizeNN = textures.imageResizeNN;
+/// Resize canvas and fill with color
+pub const imageResizeCanvas = textures.imageResizeCanvas;
+/// Compute all mipmap levels for a provided image
+pub const imageMipmaps = textures.imageMipmaps;
+/// Dither image data to 16bpp or lower (Floyd-Steinberg dithering)
+pub const imageDither = textures.imageDither;
+/// Flip image vertically
+pub const imageFlipVertical = textures.imageFlipVertical;
+/// Flip image horizontally
+pub const imageFlipHorizontal = textures.imageFlipHorizontal;
+/// Rotate image by input angle in degrees (-359 to 359)
+pub const imageRotate = textures.imageRotate;
+/// Rotate image clockwise 90deg
+pub const imageRotateCW = textures.imageRotateCW;
+/// Rotate image counter-clockwise 90deg
+pub const imageRotateCCW = textures.imageRotateCCW;
+/// Modify image color: tint
+pub const imageColorTint = textures.imageColorTint;
+/// Modify image color: invert
+pub const imageColorInvert = textures.imageColorInvert;
+/// Modify image color: grayscale
+pub const imageColorGrayscale = textures.imageColorGrayscale;
+/// Modify image color: contrast (-100 to 100)
+pub const imageColorContrast = textures.imageColorContrast;
+/// Modify image color: brightness (-255 to 255)
+pub const imageColorBrightness = textures.imageColorBrightness;
+/// Modify image color: replace color
+pub const imageColorReplace = textures.imageColorReplace;
+/// Load color data from image as a Color array (RGBA - 32bit)
+pub const loadImageColors = textures.loadImageColors;
+/// Load colors palette from image as a Color array (RGBA - 32bit)
+pub const loadImagePalette = textures.loadImagePalette;
+/// Unload color data loaded with LoadImageColors()
+pub const unloadImageColors = textures.unloadImageColors;
+/// Unload colors palette loaded with LoadImagePalette()
+pub const unloadImagePalette = textures.unloadImagePalette;
+/// Get image alpha border rectangle
+pub const getImageAlphaBorder = textures.getImageAlphaBorder;
+/// Get image pixel color at (x, y) position
+pub const getImageColor = textures.getImageColor;
+/// Clear image background with provided color
+pub const imageClearBackground = textures.imageClearBackground;
+/// Draw pixel within an image
+pub const imageDrawPixel = textures.imageDrawPixel;
+/// Draw pixel within an image (Vector version)
+pub const imageDrawPixelV = textures.imageDrawPixelV;
+/// Draw line within an image
+pub const imageDrawLine = textures.imageDrawLine;
+/// Draw line within an image (Vector version)
+pub const imageDrawLineV = textures.imageDrawLineV;
+/// Draw a line defining thickness within an image
+pub const imageDrawLineEx = textures.imageDrawLineEx;
+/// Draw a lines sequence within an image
+pub const imageDrawLineStrip = textures.imageDrawLineStrip;
+/// Draw triangle within an image
+pub const imageDrawTriangle = textures.imageDrawTriangle;
+/// Draw triangle with interpolated colors within an image
+pub const imageDrawTriangleGradient = textures.imageDrawTriangleGradient;
+/// Draw triangle outline within an image
+pub const imageDrawTriangleLines = textures.imageDrawTriangleLines;
+/// Draw a triangle fan defined by points within an image (first vertex is the center)
+pub const imageDrawTriangleFan = textures.imageDrawTriangleFan;
+/// Draw a triangle strip defined by points within an image
+pub const imageDrawTriangleStrip = textures.imageDrawTriangleStrip;
+/// Draw rectangle within an image
+pub const imageDrawRectangle = textures.imageDrawRectangle;
+/// Draw rectangle within an image (Vector version)
+pub const imageDrawRectangleV = textures.imageDrawRectangleV;
+/// Draw rectangle within an image
+pub const imageDrawRectangleRec = textures.imageDrawRectangleRec;
+/// Draw a color-filled rectangle with pro parameters within and image
+pub const imageDrawRectanglePro = textures.imageDrawRectanglePro;
+/// Draw rectangle lines within an image
+pub const imageDrawRectangleLines = textures.imageDrawRectangleLines;
+/// Draw rectangle lines within an image with line thickness
+pub const imageDrawRectangleLinesEx = textures.imageDrawRectangleLinesEx;
+/// Draw rectangle with gradient colors within an image, counter-clockwise color order
+pub const imageDrawRectangleGradientEx = textures.imageDrawRectangleGradientEx;
+/// Draw a filled circle within an image
+pub const imageDrawCircle = textures.imageDrawCircle;
+/// Draw a filled circle within an image (Vector version)
+pub const imageDrawCircleV = textures.imageDrawCircleV;
+/// Draw circle outline within an image
+pub const imageDrawCircleLines = textures.imageDrawCircleLines;
+/// Draw circle outline within an image (Vector version)
+pub const imageDrawCircleLinesV = textures.imageDrawCircleLinesV;
+/// Draw a gradient-filled circle within an image
+pub const imageDrawCircleGradient = textures.imageDrawCircleGradient;
+/// Draw an image within an image
+pub const imageDrawImage = textures.imageDrawImage;
+/// Draw an image with scaling and rotation within an image
+pub const imageDrawImageEx = textures.imageDrawImageEx;
+/// Draw a part of an image defined by a rectangle within an image
+pub const imageDrawImageRec = textures.imageDrawImageRec;
+/// Draw a part of an image defined by a rectangle into destination rectangle, with scaling and rotation, within an image
+pub const imageDrawImagePro = textures.imageDrawImagePro;
+/// Draw text (using default font) within an image (destination)
+pub const imageDrawText = textures.imageDrawText;
+/// Draw text (custom sprite font) within an image (destination)
+pub const imageDrawTextEx = textures.imageDrawTextEx;
+/// Draw text using Font and pro parameters (rotation)
+pub const imageDrawTextPro = textures.imageDrawTextPro;
+/// Load texture from file into GPU memory (VRAM)
+pub const loadTexture = textures.loadTexture;
+/// Load texture from image data
+pub const loadTextureFromImage = textures.loadTextureFromImage;
+/// Load cubemap from image, multiple image cubemap layouts supported
+pub const loadTextureCubemap = textures.loadTextureCubemap;
+/// Load texture for rendering (framebuffer)
+pub const loadRenderTexture = textures.loadRenderTexture;
+/// Load texture for rendering (framebuffer), with specific format
+pub const loadRenderTextureEx = textures.loadRenderTextureEx;
+/// Check if texture is valid (loaded in GPU)
+pub const isTextureValid = textures.isTextureValid;
+/// Unload texture from GPU memory (VRAM)
+pub const unloadTexture = textures.unloadTexture;
+/// Check if render texture is valid (loaded in GPU)
+pub const isRenderTextureValid = textures.isRenderTextureValid;
+/// Unload render texture from GPU memory (VRAM)
+pub const unloadRenderTexture = textures.unloadRenderTexture;
+/// Update GPU texture with new data (pixels should be able to fill texture)
+pub const updateTexture = textures.updateTexture;
+/// Update GPU texture rectangle with new data (pixels and rec should fit in texture)
+pub const updateTextureRec = textures.updateTextureRec;
+/// Generate GPU mipmaps for a texture
+pub const genTextureMipmaps = textures.genTextureMipmaps;
+/// Set texture scaling filter mode
+pub const setTextureFilter = textures.setTextureFilter;
+/// Set texture wrapping mode
+pub const setTextureWrap = textures.setTextureWrap;
+/// Draw a Texture2D
+pub const drawTexture = textures.drawTexture;
+/// Draw a Texture2D with position defined as Vector2
+pub const drawTextureV = textures.drawTextureV;
+/// Draw a Texture2D with rotation and scale
+pub const drawTextureEx = textures.drawTextureEx;
+/// Draw a part of a texture defined by a rectangle
+pub const drawTextureRec = textures.drawTextureRec;
+/// Draw a part of a texture defined by a source rectangle to destination rectangle, with scaling and rotation
+pub const drawTexturePro = textures.drawTexturePro;
+/// Draw a texture (or part of it) that stretches or shrinks nicely
+pub const drawTextureNPatch = textures.drawTextureNPatch;
+/// Check if two colors are equal
+pub const colorIsEqual = textures.colorIsEqual;
+/// Get color with alpha applied, alpha goes from 0.0f to 1.0f
+pub const fade = textures.fade;
+/// Get hexadecimal value for a Color (0xRRGGBBAA)
+pub const colorToInt = textures.colorToInt;
+/// Get Color normalized as float [0..1]
+pub const colorNormalize = textures.colorNormalize;
+/// Get Color from normalized values [0..1]
+pub const colorFromNormalized = textures.colorFromNormalized;
+/// Get HSV values for a Color, hue [0..360], saturation/value [0..1]
+pub const colorToHSV = textures.colorToHSV;
+/// Get a Color from HSV values, hue [0..360], saturation/value [0..1]
+pub const colorFromHSV = textures.colorFromHSV;
+/// Get color multiplied with another color
+pub const colorTint = textures.colorTint;
+/// Get color with brightness correction, brightness factor goes from -1.0f to 1.0f
+pub const colorBrightness = textures.colorBrightness;
+/// Get color with contrast correction, contrast values between -1.0f and 1.0f
+pub const colorContrast = textures.colorContrast;
+/// Get color with alpha applied, alpha goes from 0.0f to 1.0f
+pub const colorAlpha = textures.colorAlpha;
+/// Get src alpha-blended into dst color with tint
+pub const colorAlphaBlend = textures.colorAlphaBlend;
+/// Get color lerp interpolation between two colors, factor [0.0f..1.0f]
+pub const colorLerp = textures.colorLerp;
+/// Get Color structure from hexadecimal value
+pub const getColor = textures.getColor;
+/// Get Color from a source pixel pointer of certain format
+pub const getPixelColor = textures.getPixelColor;
+/// Set color formatted into destination pixel pointer
+pub const setPixelColor = textures.setPixelColor;
+/// Get pixel data size in bytes for certain format
+pub const getPixelDataSize = textures.getPixelDataSize;
+
 // raylib's text module.
 
 /// Draw text (using default font).
