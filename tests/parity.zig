@@ -10,7 +10,7 @@
 //!
 //! Anything else fails, listing every function that is in neither place, per
 //! module file, so that each module can be finished on its own with
-//! `zig build parity -Dmodule=<core|shapes|textures|text|models|audio>`. A name
+//! `zig build parity -Dmodule=<core|files|input|shapes|textures|text|models|audio>`. A name
 //! in `not_wrapped` that raylib's translated module has no function for fails
 //! too, so a stale line cannot linger.
 //!
@@ -46,6 +46,8 @@ const Module = struct {
 /// Every module file raylibz has, with the translated module each wraps.
 const modules = [_]Module{
     .{ .name = "core", .file = raylibz.core, .translated = c, .not_wrapped = &raylibz.core.not_wrapped },
+    .{ .name = "files", .file = raylibz.files, .translated = c, .not_wrapped = &raylibz.files.not_wrapped },
+    .{ .name = "input", .file = raylibz.input, .translated = c, .not_wrapped = &raylibz.input.not_wrapped },
     .{ .name = "shapes", .file = raylibz.shapes, .translated = c, .not_wrapped = &raylibz.shapes.not_wrapped },
     .{ .name = "textures", .file = raylibz.textures, .translated = c, .not_wrapped = &raylibz.textures.not_wrapped },
     .{ .name = "text", .file = raylibz.text, .translated = c, .not_wrapped = &raylibz.text.not_wrapped },
@@ -67,7 +69,7 @@ test "parity: every raylib function is wrapped, re-exported or listed in not_wra
 
     if (wanted.len != 0 and !knownModule(wanted)) {
         log.err(
-            "parity: -Dmodule={s} is not a module file; expected core, shapes, textures, text, models, audio or raymath",
+            "parity: -Dmodule={s} is not a module file; expected core, files, input, shapes, textures, text, models, audio or raymath",
             .{wanted},
         );
         failures += 1;

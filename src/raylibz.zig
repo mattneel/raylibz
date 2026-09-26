@@ -59,8 +59,12 @@ pub const vector4 = @import("vector4.zig");
 /// `Matrix` and raymath's `Matrix*` functions as methods.
 pub const matrix = @import("matrix.zig");
 
-/// raylib's core module (with `rgestures` and `rcamera`).
+/// raylib's core module, up to its file system functions.
 pub const core = @import("core.zig");
+/// raylib's core module from its file system functions on: files, compression, automation events.
+pub const files = @import("files.zig");
+/// raylib's input handling, with `rgestures` and `rcamera`.
+pub const input = @import("input.zig");
 /// raylib's shapes module.
 pub const shapes = @import("shapes.zig");
 /// raylib's textures module.
@@ -227,10 +231,24 @@ pub const endDrawing = core.endDrawing;
 /// Set background color (framebuffer clear color).
 pub const clearBackground = core.clearBackground;
 
+// raylib's core module: files, compression, automation events.
+
+// raylib's input handling, gestures and camera.
+
+// raylib's shapes module.
+
+// raylib's textures module.
+
 // raylib's text module.
 
 /// Draw text (using default font).
 pub const drawText = text.drawText;
+
+// raylib's models module.
+
+// raylib's audio module.
+
+// raymath's free functions.
 
 // Everything `zig build test` runs here: this file's re-export test, and the
 // unit tests of every file the package publishes.
@@ -239,16 +257,17 @@ test {
 }
 
 /// The module files whose declarations the root publishes flatly.
-const module_files = .{ core, shapes, textures, text, models, audio, math };
+const module_files = .{ core, files, input, shapes, textures, text, models, audio, math };
 
 test "every declaration of every module file is re-exported by the root" {
-    // `not_wrapped` is the one decl that cannot be flat: every module file has
-    // one, and the root publishes them together as `raylibz.not_wrapped`.
+    // `not_wrapped` cannot be flat: every module file has one, and the root
+    // publishes them together as `raylibz.not_wrapped`. `internal` is each module
+    // file's namespace of private helpers, which nothing re-exports.
     const missing = comptime blk: {
         var missing_names: []const []const u8 = &.{};
         for (module_files) |module_file| {
             for (@typeInfo(module_file).@"struct".decl_names) |name| {
-                if (std.mem.eql(u8, name, "not_wrapped")) continue;
+                if (std.mem.eql(u8, name, "not_wrapped") or std.mem.eql(u8, name, "internal")) continue;
                 if (!@hasDecl(@This(), name)) missing_names = missing_names ++ .{name};
             }
         }

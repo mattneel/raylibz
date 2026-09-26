@@ -1,6 +1,7 @@
-//! raylib's core module: window and graphics device, cursor and input, timing,
-//! files, storage, callbacks and the misc functions, plus raylib.h's own
-//! `rgestures` and `rcamera` sections, which this file holds too.
+//! raylib's core module up to its file system functions: window and graphics
+//! device, cursor, drawing modes, VR, shaders, screen space, timing, frame
+//! control, random values, and the misc, logging and memory functions. The rest
+//! of core is in files.zig and input.zig.
 //!
 //! Every function follows raylibz's rules: raylib's name with the first letter
 //! lowercased, raylib's C types spelled as the mirror type of the same name,
@@ -11,6 +12,8 @@
 //! This file imports only names the root also publishes (`c`, `cast`, `types`,
 //! the vector files and the type names they hold), because the root's re-export
 //! test requires every top-level declaration here to exist in `raylibz` too.
+//! Private helpers go in a `const internal = struct { ... };`, which that test
+//! skips.
 
 const c = @import("raylib");
 const cast = @import("cast.zig");
@@ -18,8 +21,8 @@ const types = @import("types.zig");
 
 const Color = types.Color;
 
-/// The functions of raylib.h's `core`, `rgestures` and `rcamera` sections that
-/// raylibz does not wrap, and why. One line each.
+/// The functions of raylib.h's core module, up to its file system functions,
+/// that raylibz does not wrap, and why. One line each.
 pub const not_wrapped = [_]cast.NotWrapped{};
 
 /// Initialize window and OpenGL context

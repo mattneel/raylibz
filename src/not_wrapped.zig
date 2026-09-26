@@ -10,6 +10,8 @@ const cast = @import("cast.zig");
 
 const audio = @import("audio.zig");
 const core = @import("core.zig");
+const files = @import("files.zig");
+const input = @import("input.zig");
 const math = @import("math.zig");
 const models = @import("models.zig");
 const shapes = @import("shapes.zig");
@@ -18,6 +20,8 @@ const textures = @import("textures.zig");
 
 /// raylib.h's functions that raylibz does not wrap, in module order.
 pub const raylib: []const cast.NotWrapped = core.not_wrapped ++
+    files.not_wrapped ++
+    input.not_wrapped ++
     shapes.not_wrapped ++
     textures.not_wrapped ++
     text.not_wrapped ++

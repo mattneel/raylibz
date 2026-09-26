@@ -80,7 +80,7 @@ pub fn build(b: *std.Build) !void {
     const module_option = b.option(
         []const u8,
         "module",
-        "check one module file only: core, shapes, textures, text, models, audio or raymath",
+        "check one module file only: core, files, input, shapes, textures, text, models, audio or raymath",
     ) orelse "";
     const parity_options = b.addOptions();
     parity_options.addOption([]const u8, "module", module_option);
