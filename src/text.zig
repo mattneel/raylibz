@@ -125,8 +125,7 @@ pub fn isFontValid(font: Font) bool {
 ///
 /// raylibz returns the glyphs raylib allocated as a slice, `null` when raylib
 /// could not read the font data at all; an empty slice means the data held none
-/// of the requested codepoints. It takes ownership of the memory `glyphs`
-/// points into and releases it; it dies at this call: release the result with
+/// of the requested codepoints. The memory is the caller's: release it with
 /// `unloadFontData`. No window is needed: this is the CPU half of font loading,
 /// and `genImageFontAtlas` turns the glyphs into an atlas image.
 ///
@@ -184,8 +183,8 @@ pub fn genImageFontAtlas(
 
 /// Unload font chars info data (RAM)
 ///
-/// Takes ownership of the glyph data `glyphs` points into and releases it; it
-/// dies at this call. `glyphs` is what `loadFontData` returned.
+/// Takes ownership of every glyph image and of the array itself, and releases
+/// them; they die at this call. `glyphs` is what `loadFontData` returned.
 pub fn unloadFontData(glyphs: []GlyphInfo) void {
     const pointer: [*c]c.GlyphInfo = @ptrCast(glyphs.ptr);
     c.UnloadFontData(pointer, cast.asLen(glyphs));
@@ -376,8 +375,8 @@ pub fn getCodepointCount(text: [:0]const u8) i32 {
 
 /// Get next codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure
 ///
-/// raylibz names raylib's `codepointSize` out-parameter `codepointSize` in the
-/// returned struct: how many bytes of `text` the codepoint took.
+/// raylibz returns raylib's `codepointSize` out-parameter in the struct, with
+/// the codepoint: how many bytes of `text` the codepoint took.
 pub fn getCodepoint(text: [:0]const u8) struct { codepoint: i32, codepointSize: i32 } {
     var size: c_int = 0;
     const codepoint = c.GetCodepoint(cast.cstr(text), &size);
@@ -445,9 +444,8 @@ pub fn unloadTextLines(lines: [][*:0]u8) void {
 
 /// Copy one string to another, returns bytes copied
 ///
-/// raylibz takes `dst` as a slice, which raylib writes the text and its `'\0'`
-/// into: it must have room for `src` plus one byte. `src` may not be longer
-/// than `dst`.
+/// raylibz takes `dst` as a slice, and raylib writes the text and its `'\0'`
+/// into it: `dst` must have room for all of `src` and one more byte.
 pub fn textCopy(dst: []u8, src: [:0]const u8) i32 {
     return c.TextCopy(dst.ptr, cast.cstr(src));
 }
