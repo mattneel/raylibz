@@ -942,6 +942,12 @@ test "loadTextLines and unloadTextLines own every line and the array" {
 }
 
 test "loadFontData and genImageFontAtlas describe one owned array each" {
+    // raylib's trace log writes straight to fd 1, which is the test runner's
+    // protocol pipe under `zig build test`: an atlas or font warning here would
+    // desync it, so raylib is muted for the length of the test.
+    c.SetTraceLogLevel(c.LOG_NONE);
+    defer c.SetTraceLogLevel(c.LOG_INFO);
+
     // The CPU half of font loading needs a font file and nothing else; the
     // system's DejaVu is a stand-in for the resources a package does not ship.
     const path = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf";
