@@ -528,6 +528,20 @@ const internal = struct {
     const std = @import("std");
     const testing = std.testing;
 
+    /// raylib's default trace log level, which the tests restore after silencing
+    /// the log with `traceLogOff`.
+    const defaultTraceLogLevel = c.LOG_INFO;
+
+    /// Silences raylib's trace log for the rest of the test.
+    ///
+    /// raylib's `TraceLog` writes to stdout, and stdout is the build runner's
+    /// protocol pipe under `zig build test`: a test that lets raylib log hangs
+    /// the runner (a Zig++ 2469 build-runner bug, not raylib's). Tests call this
+    /// first and `defer c.SetTraceLogLevel(internal.defaultTraceLogLevel)`.
+    fn traceLogOff() void {
+        c.SetTraceLogLevel(c.LOG_NONE);
+    }
+
     /// Fills `out` with a 16-bit PCM WAV file holding `samples` interleaved
     /// over `channels`, and returns the part of `out` the file occupies.
     fn wavBytes(out: []u8, sampleRate: u32, channels: u16, samples: []const i16) []u8 {
@@ -561,6 +575,8 @@ const internal = struct {
 };
 
 test "loadWaveFromMemory decodes a 16-bit PCM WAV built in memory" {
+    internal.traceLogOff();
+    defer c.SetTraceLogLevel(internal.defaultTraceLogLevel);
     var bytes: [128]u8 = undefined;
     const samples = [_]i16{ 0, 16384, -16384, 32767 };
     const wav = internal.wavBytes(&bytes, 8000, 1, &samples);
@@ -583,6 +599,8 @@ test "loadWaveFromMemory decodes a 16-bit PCM WAV built in memory" {
 }
 
 test "loadWaveFromMemory is error.LoadFailed for what raylib cannot decode" {
+    internal.traceLogOff();
+    defer c.SetTraceLogLevel(internal.defaultTraceLogLevel);
     var bytes: [128]u8 = undefined;
     const wav = internal.wavBytes(&bytes, 8000, 1, &.{ 0, 1 });
 
@@ -592,6 +610,8 @@ test "loadWaveFromMemory is error.LoadFailed for what raylib cannot decode" {
 }
 
 test "loadWave reads a wave file from disk" {
+    internal.traceLogOff();
+    defer c.SetTraceLogLevel(internal.defaultTraceLogLevel);
     var tmp = internal.testing.tmpDir(.{});
     defer tmp.cleanup();
 
@@ -613,6 +633,8 @@ test "loadWave reads a wave file from disk" {
 }
 
 test "waveCopy copies a wave and waveCrop crops the frames it keeps" {
+    internal.traceLogOff();
+    defer c.SetTraceLogLevel(internal.defaultTraceLogLevel);
     var bytes: [128]u8 = undefined;
     const samples = [_]i16{ 0, 1000, 2000, 3000, 4000, 5000, 6000, 7000 };
     const wave = try loadWaveFromMemory(".wav", internal.wavBytes(&bytes, 8000, 1, &samples));
@@ -645,6 +667,8 @@ test "waveCopy copies a wave and waveCrop crops the frames it keeps" {
 }
 
 test "waveFormat converts the wave's rate, sample size and channels in place" {
+    internal.traceLogOff();
+    defer c.SetTraceLogLevel(internal.defaultTraceLogLevel);
     var bytes: [128]u8 = undefined;
     const samples = [_]i16{ 8192, -8192, 4096, -4096 };
     var wave = try loadWaveFromMemory(".wav", internal.wavBytes(&bytes, 8000, 1, &samples));
@@ -672,6 +696,8 @@ test "waveFormat converts the wave's rate, sample size and channels in place" {
 }
 
 test "loadWaveSamples returns the wave's samples normalized to floats" {
+    internal.traceLogOff();
+    defer c.SetTraceLogLevel(internal.defaultTraceLogLevel);
     var bytes: [128]u8 = undefined;
     const samples = [_]i16{ 0, 16384, -16384, 32767 };
     const wave = try loadWaveFromMemory(".wav", internal.wavBytes(&bytes, 8000, 1, &samples));
@@ -685,6 +711,8 @@ test "loadWaveSamples returns the wave's samples normalized to floats" {
 }
 
 test "exportWave writes a wave file raylib loads back" {
+    internal.traceLogOff();
+    defer c.SetTraceLogLevel(internal.defaultTraceLogLevel);
     var tmp = internal.testing.tmpDir(.{});
     defer tmp.cleanup();
 
@@ -713,6 +741,8 @@ test "exportWave writes a wave file raylib loads back" {
 }
 
 test "exportWaveAsCode writes the wave's parameters and samples as C" {
+    internal.traceLogOff();
+    defer c.SetTraceLogLevel(internal.defaultTraceLogLevel);
     var tmp = internal.testing.tmpDir(.{});
     defer tmp.cleanup();
 
