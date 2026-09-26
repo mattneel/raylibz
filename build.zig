@@ -64,10 +64,12 @@ pub fn build(b: *std.Build) !void {
     module.linkLibrary(raylib_artifact);
 
     // `zig build test`: the unit tests of every file in src/ (the root's test
-    // pulls them in), the layout assertion of every mirror, and the root
-    // re-export test. tests/parity.zig is not here: it fails on purpose until
-    // every function is accounted for, and `zig build parity` runs it.
-    const test_step = b.step("test", "Run the unit, layout and re-export tests");
+    // pulls them in), the layout assertion of every mirror, the root re-export
+    // test, and tests/raymath.zig, which compares every raymath wrapper against
+    // raylib's own function on the same inputs. tests/parity.zig is not here: it
+    // fails on purpose until every function is accounted for, and `zig build
+    // parity` runs it.
+    const test_step = b.step("test", "Run the unit, layout, raymath and re-export tests");
     const unit_tests = b.addTest(.{ .name = "raylibz", .root_module = module });
     test_step.dependOn(&b.addRunArtifact(unit_tests).step);
     const layout_tests = b.addTest(.{
@@ -75,6 +77,11 @@ pub fn build(b: *std.Build) !void {
         .root_module = testsModule(b, module, raylib_artifact, target, optimize, "tests/layout.zig"),
     });
     test_step.dependOn(&b.addRunArtifact(layout_tests).step);
+    const raymath_tests = b.addTest(.{
+        .name = "raymath",
+        .root_module = testsModule(b, module, raylib_artifact, target, optimize, "tests/raymath.zig"),
+    });
+    test_step.dependOn(&b.addRunArtifact(raymath_tests).step);
 
     // `zig build parity` (`-Dmodule=<file>` to check one module on its own).
     const module_option = b.option(

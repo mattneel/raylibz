@@ -14,10 +14,12 @@
 //! in `not_wrapped` that raylib's translated module has no function for fails
 //! too, so a stale line cannot linger.
 //!
-//! raymath gets the same treatment: every RMAPI function is a free function in
-//! `math.zig`, a method on `Vector2`, `Vector3`, `Vector4` or `Matrix` (named
-//! without the type prefix, per the conventions), or listed in
-//! `not_wrapped.raymath`.
+//! raymath gets the same treatment, against the mapping table in
+//! `tests/raymath.zig`: every RMAPI function has an entry there (a method on
+//! `Vector2`, `Vector3`, `Vector4` or `Matrix`, or a free function in
+//! `math.zig`), every entry names a declaration raylibz has, and
+//! `not_wrapped.raymath` lists no name raylib has no function for. The table is
+//! the one `tests/raymath.zig`'s own test walks, so the two cannot drift.
 //!
 //! The failure report goes to stderr through `std.log` on the failing path only:
 //! a passing run writes nothing at all, as the test runner requires.
@@ -26,6 +28,7 @@ const std = @import("std");
 const raylibz = @import("raylibz");
 const build_options = @import("build_options");
 const functions = @import("functions.zig");
+const raymath_table = @import("raymath.zig");
 
 const cast = raylibz.cast;
 const c = raylibz.c;
@@ -53,14 +56,6 @@ const modules = [_]Module{
     .{ .name = "text", .file = raylibz.text, .translated = c, .not_wrapped = &raylibz.text.not_wrapped },
     .{ .name = "models", .file = raylibz.models, .translated = c, .not_wrapped = &raylibz.models.not_wrapped },
     .{ .name = "audio", .file = raylibz.audio, .translated = c, .not_wrapped = &raylibz.audio.not_wrapped },
-};
-
-/// The types raymath's methods land on, and the prefixes their names carry.
-const method_owners = [_]struct { prefix: []const u8, owner: type }{
-    .{ .prefix = "Vector2", .owner = raylibz.Vector2 },
-    .{ .prefix = "Vector3", .owner = raylibz.Vector3 },
-    .{ .prefix = "Vector4", .owner = raylibz.Vector4 },
-    .{ .prefix = "Matrix", .owner = raylibz.Matrix },
 };
 
 test "parity: every raylib function is wrapped, re-exported or listed in not_wrapped" {
@@ -103,29 +98,99 @@ test "parity: every raylib function is wrapped, re-exported or listed in not_wra
     try std.testing.expectEqual(@as(usize, 0), failures);
 }
 
-/// raymath's half of the parity check: every RMAPI function is a free function
-/// in `math.zig`, a method on the type its name names, or listed in
-/// `not_wrapped.raymath`. Returns how many are in none of the three, after
-/// reporting them.
+/// raymath's half of the parity check: every RMAPI function has an entry in
+/// `tests/raymath.zig`'s mapping table, every entry names a declaration raylibz
+/// has, and `not_wrapped.raymath` lists no name raylib has no function for.
+/// Returns how many of those fail, after reporting them.
 fn raymathFailures() usize {
     var failures: usize = 0;
-    const missing_functions = comptime raymathMissing();
-    const stale_names = comptime stale(raylibz.raymath, &raylibz.math.not_wrapped);
-    if (missing_functions.len != 0) {
-        failures += missing_functions.len;
-        log.err("raymath: {d} of {d} functions are neither a method, a free function in math.zig, nor listed:", .{
-            missing_functions.len, functions.raymath.len,
+    const unmapped_names = comptime raymathUnmapped();
+    const absent_names = comptime raymathAbsent();
+    const stale_names = comptime raymathStale();
+    const not_wrapped_stale = comptime stale(raylibz.raymath, &raylibz.math.not_wrapped);
+
+    if (unmapped_names.len != 0) {
+        failures += unmapped_names.len;
+        log.err("raymath: {d} of {d} functions have no entry in tests/raymath.zig's mapping table:", .{
+            unmapped_names.len, functions.raymath.len,
         });
-        for (missing_functions) |missing_function| {
-            log.err("    {s} (expected: {s})", .{ missing_function.name, missing_function.expected });
-        }
+        for (unmapped_names) |name| log.err("    {s}", .{name});
+    }
+    if (raymath_table.mappings.len != functions.raymath.len) {
+        failures += 1;
+        log.err("tests/raymath.zig: the mapping table has {d} entries, raymath.h has {d} functions", .{
+            raymath_table.mappings.len, functions.raymath.len,
+        });
+    }
+    if (absent_names.len != 0) {
+        failures += absent_names.len;
+        log.err("tests/raymath.zig: {d} mapping table entr(y|ies) name a declaration raylibz does not have:", .{
+            absent_names.len,
+        });
+        for (absent_names) |name| log.err("    {s}", .{name});
     }
     if (stale_names.len != 0) {
         failures += stale_names.len;
-        log.err("math.zig: not_wrapped lists {d} name(s) raymath has no function for:", .{stale_names.len});
+        log.err("tests/raymath.zig: {d} mapping table entr(y|ies) are not functions of raylib's own raymath.h:", .{
+            stale_names.len,
+        });
         for (stale_names) |name| log.err("    {s}", .{name});
     }
+    if (not_wrapped_stale.len != 0) {
+        failures += not_wrapped_stale.len;
+        log.err("math.zig: not_wrapped lists {d} name(s) raymath has no function for:", .{not_wrapped_stale.len});
+        for (not_wrapped_stale) |name| log.err("    {s}", .{name});
+    }
     return failures;
+}
+
+/// The names in raylib's raymath function list that the mapping table in
+/// `tests/raymath.zig` has no entry for.
+fn raymathUnmapped() []const []const u8 {
+    comptime {
+        @setEvalBranchQuota(1_000_000);
+        var names: []const []const u8 = &.{};
+        for (functions.raymath) |name| {
+            if (!mapped(name)) names = names ++ .{name};
+        }
+        return names;
+    }
+}
+
+/// The C names of the mapping table's entries whose declaration raylibz does not
+/// have: a wrapper that was never written, or one whose Zig name changed.
+fn raymathAbsent() []const []const u8 {
+    comptime {
+        @setEvalBranchQuota(1_000_000);
+        var names: []const []const u8 = &.{};
+        for (raymath_table.mappings) |mapping| {
+            if (!@hasDecl(mapping.owner.holder(), &zigName(mapping.zig_name))) names = names ++ .{mapping.c_name};
+        }
+        return names;
+    }
+}
+
+/// The C names of the mapping table's entries that are not functions of raylib's
+/// own translated `raymath.h`: a renamed C function, or a line nobody deleted.
+fn raymathStale() []const []const u8 {
+    comptime {
+        @setEvalBranchQuota(1_000_000);
+        var names: []const []const u8 = &.{};
+        for (raymath_table.mappings) |mapping| {
+            if (!isFunction(raylibz.raymath, mapping.c_name)) names = names ++ .{mapping.c_name};
+        }
+        return names;
+    }
+}
+
+/// Whether `tests/raymath.zig`'s mapping table has an entry for `name`.
+fn mapped(comptime name: []const u8) bool {
+    comptime {
+        for (raymath_table.mappings) |mapping| {
+            if (std.mem.eql(u8, mapping.c_name, name)) return true;
+        }
+        return false;
+    }
 }
 
 test "parity: the generated function list is raylib's own" {
@@ -171,18 +236,18 @@ test "parity logic self-check: a tiny fake module file" {
     try std.testing.expectEqualSlices([]const u8, &.{"NoSuchFunction"}, comptime stale(Translated, &stale_list));
 }
 
-test "parity logic self-check: the name and the method mapping" {
+test "parity logic self-check: the name and the raymath mapping table" {
     try std.testing.expectEqualStrings("initWindow", comptime &zigName("InitWindow"));
     try std.testing.expectEqualStrings("getFPS", comptime &zigName("GetFPS"));
     try std.testing.expectEqualStrings("loadUTF8", comptime &zigName("LoadUTF8"));
     try std.testing.expectEqualStrings("loadImageAnim", comptime &zigName("LoadImageAnim"));
 
-    // A name with a type prefix maps to that type's method, without the prefix.
-    try std.testing.expectEqualStrings("Vector2.add", comptime methodHint("Vector2Add"));
-    try std.testing.expectEqualStrings("Matrix.rotateX", comptime methodHint("MatrixRotateX"));
-    // Anything else is a free function in math.zig.
-    try std.testing.expectEqualStrings("math.quaternionSlerp", comptime methodHint("QuaternionSlerp"));
-    try std.testing.expectEqualStrings("math.clamp", comptime methodHint("Clamp"));
+    // The table raymath is checked against is tests/raymath.zig's.
+    try std.testing.expect(comptime mapped("Vector2Add"));
+    try std.testing.expect(comptime mapped("MatrixToFloatV"));
+    try std.testing.expect(comptime mapped("QuaternionSlerp"));
+    try std.testing.expect(comptime mapped("Clamp"));
+    try std.testing.expect(!comptime mapped("NoSuchFunction"));
 }
 
 /// The `-Dmodule` values this test accepts: every module file, and raymath.
@@ -241,72 +306,6 @@ fn stale(comptime translated: type, comptime not_wrapped: []const cast.NotWrappe
             if (!isFunction(translated, entry.name)) stale_names = stale_names ++ .{entry.name};
         }
         return stale_names;
-    }
-}
-
-/// One raymath function that has to be written, and where it has to go.
-const MissingRaymath = struct {
-    /// raymath's name for it, e.g. `Vector2Add`.
-    name: []const u8,
-    /// Where it has to land, e.g. `the method Vector2.add`.
-    expected: []const u8,
-};
-
-/// raymath's functions that are in none of the three places they may be, with
-/// the place each one belongs in.
-fn raymathMissing() []const MissingRaymath {
-    comptime {
-        @setEvalBranchQuota(1_000_000);
-        var missing_functions: []const MissingRaymath = &.{};
-        for (functions.raymath) |name| {
-            if (@hasDecl(raylibz.math, &zigName(name))) continue;
-            if (hasMethod(name)) continue;
-            if (lists(&raylibz.math.not_wrapped, name)) continue;
-            missing_functions = missing_functions ++ .{MissingRaymath{
-                .name = name,
-                .expected = raymathExpectation(name),
-            }};
-        }
-        return missing_functions;
-    }
-}
-
-/// Whether the type raymath's `name` names carries the method it maps to, e.g.
-/// `Vector2Add` against `Vector2.add`.
-fn hasMethod(comptime name: []const u8) bool {
-    comptime {
-        for (method_owners) |entry| {
-            if (!std.mem.startsWith(u8, name, entry.prefix)) continue;
-            if (@hasDecl(entry.owner, &zigName(name[entry.prefix.len..]))) return true;
-        }
-        return false;
-    }
-}
-
-/// Where raymath's `name` has to land, in one line, for the failure report.
-fn raymathExpectation(comptime name: []const u8) []const u8 {
-    comptime {
-        for (method_owners) |entry| {
-            if (std.mem.startsWith(u8, name, entry.prefix)) {
-                return std.fmt.comptimePrint("the method {s}.{s}", .{
-                    entry.prefix,
-                    &zigName(name[entry.prefix.len..]),
-                });
-            }
-        }
-        return std.fmt.comptimePrint("the free function math.{s}", .{&zigName(name)});
-    }
-}
-
-/// `Vector2Add` → `"Vector2.add"`, `QuaternionSlerp` → `"math.quaternionSlerp"`.
-fn methodHint(comptime name: []const u8) []const u8 {
-    comptime {
-        for (method_owners) |entry| {
-            if (std.mem.startsWith(u8, name, entry.prefix)) {
-                return std.fmt.comptimePrint("{s}.{s}", .{ entry.prefix, &zigName(name[entry.prefix.len..]) });
-            }
-        }
-        return std.fmt.comptimePrint("math.{s}", .{&zigName(name)});
     }
 }
 
