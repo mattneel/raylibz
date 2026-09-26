@@ -326,11 +326,11 @@ pub const enableCursor = core.enableCursor;
 pub const disableCursor = core.disableCursor;
 /// Check if cursor is on the screen.
 pub const isCursorOnScreen = core.isCursorOnScreen;
-/// Set background color (framebuffer clear color).
+/// Clear background (framebuffer) to color.
 pub const clearBackground = core.clearBackground;
-/// Setup drawing canvas to start drawing.
+/// Begin canvas (framebuffer) drawing.
 pub const beginDrawing = core.beginDrawing;
-/// End canvas drawing and swap buffers (double buffering).
+/// End canvas (framebuffer) drawing and swap buffers (double buffering).
 pub const endDrawing = core.endDrawing;
 /// Begin 2D mode with custom camera (2D).
 pub const beginMode2D = core.beginMode2D;

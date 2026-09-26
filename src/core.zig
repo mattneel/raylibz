@@ -289,15 +289,15 @@ pub const isCursorOnScreen = c.IsCursorOnScreen;
 
 // Drawing-related functions
 
-/// Set background color (framebuffer clear color)
+/// Clear background (framebuffer) to color
 pub fn clearBackground(color: Color) void {
     c.ClearBackground(cast.as(c.Color, color));
 }
 
-/// Setup drawing canvas to start drawing
+/// Begin canvas (framebuffer) drawing
 pub const beginDrawing = c.BeginDrawing;
 
-/// End canvas drawing and swap buffers (double buffering)
+/// End canvas (framebuffer) drawing and swap buffers (double buffering)
 pub const endDrawing = c.EndDrawing;
 
 /// Begin 2D mode with custom camera (2D)
