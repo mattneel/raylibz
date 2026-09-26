@@ -211,10 +211,18 @@ pub const drawGrid = c.DrawGrid;
 /// Load model from files (meshes and materials)
 ///
 /// raylib pairs the load with `isModelValid`; raylibz makes that check and
-/// returns `error.LoadFailed` instead of an unusable model.
+/// returns `error.LoadFailed` instead of an unusable model. On failure, what
+/// raylib built before the check — the white fallback material and the
+/// `meshMaterial` array of `rmodels.c:1143-1151` — is released with
+/// `unloadModel` first, so the error path does not leak it. `UnloadModel`
+/// (`rmodels.c:1217-1240`) is safe on that partial model: `meshCount` is 0, so
+/// its mesh loop is skipped, and every other array it frees is NULL.
 pub fn loadModel(fileName: [:0]const u8) error{LoadFailed}!Model {
     const model = cast.as(Model, c.LoadModel(cast.cstr(fileName)));
-    if (!isModelValid(model)) return error.LoadFailed;
+    if (!isModelValid(model)) {
+        unloadModel(model);
+        return error.LoadFailed;
+    }
     return model;
 }
 
@@ -224,10 +232,21 @@ pub fn loadModel(fileName: [:0]const u8) error{LoadFailed}!Model {
 /// data as `mesh`, so `mesh` must not be used (or unloaded) afterwards —
 /// `unloadModel` releases that data. raylib pairs the load with
 /// `isModelValid`; raylibz makes that check and returns `error.LoadFailed`
-/// instead of an unusable model.
+/// instead of an unusable model. On failure, what raylib allocated — `mesh`'s
+/// shallow copy, the default material and the `meshMaterial` array of
+/// `rmodels.c:1161-1180` — is released first, so the error path does not leak;
+/// and `mesh`'s vertex data dies with it, since the copy shares it.
+///
+/// The release is `internal.releasePartialModel`, not `unloadModel`: this load's
+/// failure shape has `meshCount` 1, so `UnloadModel`'s unconditional walks over
+/// `meshes` (`rmodels.c:1220`) and `materials` (`rmodels.c:1226`) would fault on
+/// whichever of them the failed allocation left NULL.
 pub fn loadModelFromMesh(mesh: Mesh) error{LoadFailed}!Model {
     const model = cast.as(Model, c.LoadModelFromMesh(cast.as(c.Mesh, mesh)));
-    if (!isModelValid(model)) return error.LoadFailed;
+    if (!isModelValid(model)) {
+        internal.releasePartialModel(model);
+        return error.LoadFailed;
+    }
     return model;
 }
 
@@ -477,12 +496,19 @@ pub fn loadMaterials(fileName: [:0]const u8) ?[]Material {
 /// Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps)
 ///
 /// raylib pairs the load with `isMaterialValid`; raylibz makes that check and
-/// returns `error.LoadFailed` instead of an unusable material. The check asks
-/// raylib for its default shader id, so a material loaded before the GPU
-/// context exists is not valid.
+/// returns `error.LoadFailed` instead of an unusable material. On failure, the
+/// maps array raylib allocated (`rmodels.c:2225`) is released with
+/// `unloadMaterial` first: its checks skip raylib's own default shader
+/// (`rmodels.c:2260`) and default texture (`rmodels.c:2264-2267`), so it frees
+/// the maps (`rmodels.c:2271`) and nothing else. The check needs raylib's
+/// default shader id, so a material loaded before the GPU context exists is not
+/// valid.
 pub fn loadMaterialDefault() error{LoadFailed}!Material {
     const material = cast.as(Material, c.LoadMaterialDefault());
-    if (!isMaterialValid(material)) return error.LoadFailed;
+    if (!isMaterialValid(material)) {
+        unloadMaterial(material);
+        return error.LoadFailed;
+    }
     return material;
 }
 
@@ -637,6 +663,31 @@ pub fn getRayCollisionQuad(ray: Ray, p1: Vector3, p2: Vector3, p3: Vector3, p4: 
 /// package.
 const internal = struct {
     const std = @import("std");
+
+    /// Releases the parts of `model` raylib allocated, for the failure path of a
+    /// load that raylib left unfinished.
+    ///
+    /// `c.UnloadModel` walks the model's arrays unconditionally
+    /// (`rmodels.c:1220`, `rmodels.c:1226`), which faults when the allocation
+    /// that made the model invalid is one of them; this frees exactly the ones
+    /// that are there. Like `UnloadModel` it leaves the shaders and textures the
+    /// materials point at alone — those are the caller's, and `unloadMaterial`
+    /// knows raylib's defaults.
+    fn releasePartialModel(model: Model) void {
+        if (model.meshes) |meshes| {
+            for (0..@intCast(model.meshCount)) |index| unloadMesh(meshes[index]);
+            c.MemFree(@ptrCast(meshes));
+        }
+        if (model.materials) |materials| {
+            for (0..@intCast(model.materialCount)) |index| unloadMaterial(materials[index]);
+            c.MemFree(@ptrCast(materials));
+        }
+        c.MemFree(@ptrCast(model.meshMaterial));
+        c.MemFree(@ptrCast(model.skeleton.bones));
+        c.MemFree(@ptrCast(model.skeleton.bindPose));
+        c.MemFree(@ptrCast(model.currentPose));
+        c.MemFree(@ptrCast(model.boneMatrices));
+    }
 
     /// A `Vector3` spelled out, for the tests.
     fn v3(x: f32, y: f32, z: f32) Vector3 {
@@ -835,13 +886,28 @@ test "isModelValid on a zeroed model, and loadModelFromMesh's success path" {
     try std.testing.expectEqual(@as(i32, 0), model.meshMaterial.?[0]);
 }
 
-test "loadModel reports raylib's IsModelValid as error.LoadFailed" {
+test "loadModel releases what raylib built on each failure path" {
     const std = internal.std;
     internal.silenceLog();
     defer internal.unsilenceLog();
-    // A file that is not there, and a file type raylib has no loader for.
-    try std.testing.expectError(error.LoadFailed, loadModel("raylibz-no-such-file.obj"));
-    try std.testing.expectError(error.LoadFailed, loadModel("raylibz-no-such-file.xyz"));
+    // Each path twice: the error path unloads the partial model raylib built
+    // (its white fallback material and meshMaterial), so a double free of what
+    // it allocated would abort in the C allocator here. One file is not there,
+    // the other has a type raylib has no loader for.
+    for (0..2) |_| {
+        try std.testing.expectError(error.LoadFailed, loadModel("raylibz-no-such-file.obj"));
+        try std.testing.expectError(error.LoadFailed, loadModel("raylibz-no-such-file.xyz"));
+    }
+}
+
+test "loadMaterialDefault releases the maps raylib allocated when the check fails" {
+    const std = internal.std;
+    internal.silenceLog();
+    defer internal.unsilenceLog();
+    // With no GL context raylib has no default shader, so isMaterialValid is
+    // false while raylib has already allocated the maps array: the error path
+    // releases it. Twice, so a double free would abort.
+    for (0..2) |_| try std.testing.expectError(error.LoadFailed, loadMaterialDefault());
 }
 
 test "loadMaterials turns raylib's array and count into a slice" {
@@ -871,11 +937,15 @@ test "loadMaterials turns raylib's array and count into a slice" {
     try std.testing.expectEqual(@as(u8, 255), diffuse.color.b);
     try std.testing.expectEqual(@as(u8, 255), diffuse.color.a);
 
-    // A file type raylib has no material loader for: raylib returns NULL.
-    try std.testing.expect(loadMaterials("raylibz-no-such-file.xyz") == null);
+    // A file type raylib has no material loader for: raylib returns NULL, so
+    // nothing was allocated and there is nothing to release. Twice, like every
+    // other failure path here.
+    for (0..2) |_| try std.testing.expect(loadMaterials("raylibz-no-such-file.xyz") == null);
 }
 
 test "loadModelAnimations returns null where raylib loaded none" {
     const std = internal.std;
-    try std.testing.expect(loadModelAnimations("raylibz-no-such-file.xyz") == null);
+    // Twice, like every other failure path here: raylib allocated nothing, so
+    // the null is all there is to release.
+    for (0..2) |_| try std.testing.expect(loadModelAnimations("raylibz-no-such-file.xyz") == null);
 }
