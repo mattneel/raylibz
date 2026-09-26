@@ -239,10 +239,10 @@ pub fn setClipboardText(text: [:0]const u8) void {
 
 /// Get clipboard text content
 ///
-/// The slice points into the platform's clipboard string, valid until the
-/// clipboard changes or raylib is closed; raylibz does not copy it. Null when
-/// the clipboard holds no text or the platform backend does not implement the
-/// call.
+/// The slice points into the platform's clipboard string, which the backend
+/// keeps and replaces (GLFW keeps one buffer): it is valid until the next call,
+/// and raylibz does not copy it. Null when the clipboard holds no text or the
+/// platform backend does not implement the call.
 pub fn getClipboardText() ?[:0]const u8 {
     return cast.optSpan(c.GetClipboardText());
 }
