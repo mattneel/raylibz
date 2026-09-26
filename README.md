@@ -1,9 +1,5 @@
 # raylibz
 
-raylibz is the Zig++-sanctioned wrapper for [raylib](https://github.com/raysan5/raylib):
-a thin, 1:1 Zig face on raylib's *own* translated headers. It ships as a package,
-not in the standard library.
-
 ## Thank you, raysan
 
 To Ramon Santamaria ([@raysan5](https://github.com/raysan5)) and raylib's
@@ -17,6 +13,10 @@ raylib is sustained by its users. If raylibz gets you a window, please consider
 [Patreon](https://www.patreon.com/raylib).
 
 ## What raylibz is
+
+raylibz is the Zig++-sanctioned wrapper for [raylib](https://github.com/raysan5/raylib):
+a thin, 1:1 Zig face on raylib's *own* translated headers. It ships as a package,
+not in the standard library.
 
 raylibz adds nothing raylib does not have, renames nothing beyond Zig casing,
 hides nothing, and never forks raylib.
@@ -54,10 +54,23 @@ exe.root_module.addImport("raylibz", raylibz.module("raylibz"));
 ```
 
 raylib itself arrives as raylibz's own dependency, built by raylib's build
-script, and the module carries that link: an executable needs nothing else. Every
-raylib build option is raylibz's too, with raylib's names and defaults, so
-`-Dplatform=rgfw`, `-Dopengl_version=gl_4_3`, `-Drtextures=false` and the rest
-work in your tree as they do in raylib's.
+script, and the module carries that link: an executable needs nothing else.
+
+raylibz declares every raylib build option with raylib's own names, values and
+defaults, so `zig build -Dplatform=rgfw -Dopengl_version=gl_4_3 -Drtextures=false`
+works in this tree exactly as it does in raylib's. From your tree, forward the
+ones you want to expose through the dependency:
+
+```zig
+const opengl_version = b.option([]const u8, "opengl_version", "raylib's OpenGL version");
+const raylibz = b.dependency("raylibz", .{
+    .target = target,
+    .optimize = optimize,
+    .opengl_version = opengl_version, // raylibz passes it to raylib unchanged
+});
+```
+
+Options you leave out keep raylib's defaults.
 
 The package names the Zig++ release it is verified with as its
 `minimum_zig_version`, and Zig++'s version dispatch runs that release for it.
