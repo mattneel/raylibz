@@ -101,6 +101,10 @@ pub fn build(b: *std.Build) !void {
     // `examples/*.zig` is a program, and `zig build run-<name> -- args` passes
     // it the arguments after `--`.
     const examples_step = b.step("examples", "Build every example");
+    // The build graph is cached, and the list of examples is read from the
+    // directory: without this, an example added or removed is not seen until
+    // the cache is cleared.
+    b.dependOnDirectoryMetadata(b.path("examples"));
     var examples_dir = try b.root.openDir(b.graph.io, "examples", .{ .iterate = true });
     defer examples_dir.close(b.graph.io);
     var examples_iter = examples_dir.iterate();
