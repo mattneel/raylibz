@@ -235,6 +235,105 @@ pub const clearBackground = core.clearBackground;
 
 // raylib's input handling, gestures and camera.
 
+/// Check if key has been pressed once.
+pub const isKeyPressed = input.isKeyPressed;
+/// Check if key has been pressed again.
+pub const isKeyPressedRepeat = input.isKeyPressedRepeat;
+/// Check if key is being pressed.
+pub const isKeyDown = input.isKeyDown;
+/// Check if key has been released once.
+pub const isKeyReleased = input.isKeyReleased;
+/// Check if key is NOT being pressed.
+pub const isKeyUp = input.isKeyUp;
+/// Get key pressed (keycode), call it multiple times for keys queued, returns 0 when the queue is empty.
+pub const getKeyPressed = input.getKeyPressed;
+/// Get char pressed (unicode), call it multiple times for chars queued, returns 0 when the queue is empty.
+pub const getCharPressed = input.getCharPressed;
+/// Get name of a QWERTY key on the current keyboard layout (eg returns string 'q' for KEY_A on an AZERTY keyboard).
+pub const getKeyName = input.getKeyName;
+/// Set a custom key to exit program (default is ESC).
+pub const setExitKey = input.setExitKey;
+/// Check if gamepad is available.
+pub const isGamepadAvailable = input.isGamepadAvailable;
+/// Get gamepad internal name id.
+pub const getGamepadName = input.getGamepadName;
+/// Check if gamepad button has been pressed once.
+pub const isGamepadButtonPressed = input.isGamepadButtonPressed;
+/// Check if gamepad button is being pressed.
+pub const isGamepadButtonDown = input.isGamepadButtonDown;
+/// Check if gamepad button has been released once.
+pub const isGamepadButtonReleased = input.isGamepadButtonReleased;
+/// Check if gamepad button is NOT being pressed.
+pub const isGamepadButtonUp = input.isGamepadButtonUp;
+/// Get the last gamepad button pressed.
+pub const getGamepadButtonPressed = input.getGamepadButtonPressed;
+/// Get axis count for a gamepad.
+pub const getGamepadAxisCount = input.getGamepadAxisCount;
+/// Get movement value for a gamepad axis.
+pub const getGamepadAxisMovement = input.getGamepadAxisMovement;
+/// Set internal gamepad mappings (SDL_GameControllerDB).
+pub const setGamepadMappings = input.setGamepadMappings;
+/// Set gamepad vibration for both motors (duration in seconds).
+pub const setGamepadVibration = input.setGamepadVibration;
+/// Check if mouse button has been pressed once.
+pub const isMouseButtonPressed = input.isMouseButtonPressed;
+/// Check if mouse button is being pressed.
+pub const isMouseButtonDown = input.isMouseButtonDown;
+/// Check if mouse button has been released once.
+pub const isMouseButtonReleased = input.isMouseButtonReleased;
+/// Check if mouse button is NOT being pressed.
+pub const isMouseButtonUp = input.isMouseButtonUp;
+/// Get mouse position X.
+pub const getMouseX = input.getMouseX;
+/// Get mouse position Y.
+pub const getMouseY = input.getMouseY;
+/// Get mouse position XY.
+pub const getMousePosition = input.getMousePosition;
+/// Get mouse delta between frames.
+pub const getMouseDelta = input.getMouseDelta;
+/// Set mouse position XY.
+pub const setMousePosition = input.setMousePosition;
+/// Set mouse offset.
+pub const setMouseOffset = input.setMouseOffset;
+/// Set mouse scaling.
+pub const setMouseScale = input.setMouseScale;
+/// Get mouse wheel movement for X or Y, whichever is larger.
+pub const getMouseWheelMove = input.getMouseWheelMove;
+/// Get mouse wheel movement for both X and Y.
+pub const getMouseWheelMoveV = input.getMouseWheelMoveV;
+/// Set mouse cursor.
+pub const setMouseCursor = input.setMouseCursor;
+/// Get touch position X for touch point 0 (relative to screen size).
+pub const getTouchX = input.getTouchX;
+/// Get touch position Y for touch point 0 (relative to screen size).
+pub const getTouchY = input.getTouchY;
+/// Get touch position XY for a touch point index (relative to screen size).
+pub const getTouchPosition = input.getTouchPosition;
+/// Get touch point identifier for provided index.
+pub const getTouchPointId = input.getTouchPointId;
+/// Get number of touch points.
+pub const getTouchPointCount = input.getTouchPointCount;
+/// Enable a set of gestures using flags.
+pub const setGesturesEnabled = input.setGesturesEnabled;
+/// Check if gesture has been detected.
+pub const isGestureDetected = input.isGestureDetected;
+/// Get latest detected gesture.
+pub const getGestureDetected = input.getGestureDetected;
+/// Get gesture hold time in seconds.
+pub const getGestureHoldDuration = input.getGestureHoldDuration;
+/// Get gesture drag vector.
+pub const getGestureDragVector = input.getGestureDragVector;
+/// Get gesture drag angle.
+pub const getGestureDragAngle = input.getGestureDragAngle;
+/// Get gesture pinch delta.
+pub const getGesturePinchVector = input.getGesturePinchVector;
+/// Get gesture pinch angle.
+pub const getGesturePinchAngle = input.getGesturePinchAngle;
+/// Update camera position for selected mode.
+pub const updateCamera = input.updateCamera;
+/// Update camera movement/rotation.
+pub const updateCameraPro = input.updateCameraPro;
+
 // raylib's shapes module.
 
 // raylib's textures module.
