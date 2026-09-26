@@ -934,6 +934,9 @@ test "every declaration of every module file is re-exported by the root" {
     // publishes them together as `raylibz.not_wrapped`. `internal` is each module
     // file's namespace of private helpers, which nothing re-exports.
     const missing = comptime blk: {
+        // Every declaration of nine files, each compared by name: well past the default
+        // budget of 1000 backward branches once the wrappers are in.
+        @setEvalBranchQuota(200_000);
         var missing_names: []const []const u8 = &.{};
         for (module_files) |module_file| {
             for (@typeInfo(module_file).@"struct".decl_names) |name| {
